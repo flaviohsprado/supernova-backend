@@ -5,13 +5,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      /*cors: {
+      cors: {
         origin: '*',
         methods: 'GET,PUT,POST,DELETE',
         optionsSuccessStatus: 200,
-      },*/
+      },
       driver: ApolloDriver,
       autoSchemaFile: true,
+      context: ({req}) => ({req})
     }),
   ],
 })

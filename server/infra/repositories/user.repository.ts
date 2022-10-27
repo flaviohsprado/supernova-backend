@@ -11,12 +11,17 @@ export class DatabaseUserRepository implements IUserRepository {
     private readonly userEntityRepository: Repository<User>,
   ) {}
 
+  public async findByKey(key: string, value: string): Promise<User> {
+      return await this.userEntityRepository.findOne({
+          where: { [key]: value },
+      });
+  }
+
   public async findAll(): Promise<User[]> {
     return this.userEntityRepository.find();
   }
 
   public async findOne(id: string): Promise<User> {
-    console.log('UUID: ', id);
     const user = await this.userEntityRepository.findOne({
       where: { id },
     });

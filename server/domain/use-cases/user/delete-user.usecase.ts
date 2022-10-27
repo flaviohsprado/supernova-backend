@@ -1,5 +1,5 @@
-import {ILogger} from "../../logger/logger.interface";
-import {IUserRepository} from "../../repositories/user.repository";
+import { IUserRepository } from '../../repositories/user.repository';
+import { ILogger } from './../../logger/logger.interface';
 
 export class DeleteUserUseCase {
   constructor(

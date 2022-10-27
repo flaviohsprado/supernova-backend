@@ -1,24 +1,27 @@
-import { IsOptionalStringColumn } from '../../../main/decorators/columns/isOptionalStringColumn.decorator';
-import { IsRequiredStringColumn } from '../../../main/decorators/columns/isRequiredStringColumn.decorator';
+import { InputType } from '@nestjs/graphql';
+import {IsRequiredString} from "../../../main/decorators/validators/isRequiredString.decorator";
+import {IsOptionalString} from "../../../main/decorators/validators/isOptionalString.decorator";
 
+@InputType()
 export class CreateUserDTO {
-  @IsRequiredStringColumn()
+  @IsRequiredString()
   public username: string;
 
-  @IsOptionalStringColumn()
+  @IsOptionalString()
   public email: string;
 
-  @IsRequiredStringColumn()
+  @IsRequiredString()
   public password: string;
 }
 
+@InputType()
 export class UpdateUserDTO {
-  @IsOptionalStringColumn()
+  @IsOptionalString()
   public username: string;
 
-  @IsOptionalStringColumn()
+  @IsOptionalString()
   public email: string;
 
-  @IsOptionalStringColumn()
+  @IsOptionalString()
   public password: string;
 }

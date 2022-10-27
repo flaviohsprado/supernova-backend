@@ -12,6 +12,7 @@ export class EnvironmentConfigService
 {
   constructor(private configService: ConfigService) {}
 
+  //REDIS
   public getRedisHost(): string {
     return this.configService.get<string>('REDIS_HOST');
   }
@@ -20,10 +21,12 @@ export class EnvironmentConfigService
     return this.configService.get<number>('REDIS_PORT');
   }
 
+  //AMBIENT
   public getEnvironment(): string {
     return this.configService.get<string>('ENVIRONMENT');
   }
 
+  //S3
   public getBucketName(): string {
     return this.configService.get<string>('AWS_S3_BUCKET');
   }
@@ -44,6 +47,7 @@ export class EnvironmentConfigService
     return this.configService.get<string>('AWS_SECRET_ACCESS');
   }
 
+  //JWT
   public getJwtSecret(): string {
     return this.configService.get<string>('JWT_SECRET');
   }
@@ -52,6 +56,7 @@ export class EnvironmentConfigService
     return this.configService.get<string>('JWT_EXPIRATION_TIME');
   }
 
+  //DATABASE
   public getDatabaseHost(): string {
     return this.configService.get<string>('DATABASE_HOST');
   }

@@ -1,5 +1,5 @@
-import {Mutation, Query, Resolver, Args} from '@nestjs/graphql';
-import {Body, HttpCode, Inject, Param} from '@nestjs/common';
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
+import {HttpCode, Inject, UseGuards} from '@nestjs/common';
 import {UseCaseProxy} from '../../usecases-proxy/usecase-proxy';
 import {
     CreateUserUseCase,
@@ -8,7 +8,7 @@ import {
     FindOneUserUseCase,
     UpdateUserUseCase,
 } from '../../../domain/use-cases/user';
-import {UserUsecasesProxyModule} from '../../usecases-proxy/user/usecases-proxy.module';
+import {UserUsecasesProxyModule} from '../../usecases-proxy/user/user-usecases-proxy.module';
 import {CreateUserDTO, UpdateUserDTO} from './user.dto';
 import {UserPresenter} from './user.presenter';
 import {User} from '../../../domain/entities/user.entity'
