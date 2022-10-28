@@ -58,7 +58,7 @@ export class UserResolver {
 
   @HttpCode(204)
   @Mutation((returns) => User)
-  public async delete(@Args('id') id: string): Promise<void> {
+  public async delete(@Args('id') id: string): Promise<User> {
     return await this.deleteUserUseCase.getInstance().execute(id);
   }
 }

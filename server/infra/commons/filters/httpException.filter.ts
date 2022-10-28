@@ -1,4 +1,3 @@
-import { LoggerService } from './../../logger/logger.service';
 import {
   ArgumentsHost,
   Catch,
@@ -7,11 +6,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AbstractHttpAdapter, HttpAdapterHost } from '@nestjs/core';
-
-interface IError {
-  message: string;
-  statusCode: number;
-}
 
 @Catch()
 export class CustomHttpException implements ExceptionFilter {

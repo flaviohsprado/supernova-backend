@@ -3,5 +3,7 @@ import { IsNumber } from 'class-validator';
 import {Field} from "@nestjs/graphql";
 
 export const IsOptionalNumber = () => {
-    return applyDecorators(IsNumber({}), Field());
+    return applyDecorators(IsNumber({}), Field({
+        nullable: true
+    }));
 };

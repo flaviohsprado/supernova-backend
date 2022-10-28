@@ -10,5 +10,5 @@ export interface IUserRepository {
   findByKey(key: string, value: string): Promise<User>;
   create(user: CreateUserDTO): Promise<User>;
   update(id: string, user: UpdateUserDTO): Promise<User>;
-  delete(id: string): Promise<void>;
+  delete(id: string): Promise<User>;
 }

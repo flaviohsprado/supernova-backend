@@ -108,12 +108,13 @@ export class UserUsecasesProxyModule {
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository],
+          inject: [LoggerService, DatabaseUserRepository, ExceptionsService],
           provide: UserUsecasesProxyModule.DELETE_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
-          ) => new UseCaseProxy(new DeleteUserUseCase(logger, repository)),
+            exceptionService: ExceptionsService
+          ) => new UseCaseProxy(new DeleteUserUseCase(logger, repository, exceptionService)),
         },
       ],
       exports: [

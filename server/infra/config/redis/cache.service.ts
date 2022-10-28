@@ -8,11 +8,10 @@ export class CacheService implements ICacheManager {
 
   public async getCachedObject(key: string): Promise<any> {
     const result = await this.cacheManager.get<string>(key);
-    return JSON.parse(result);
+    if (result) return JSON.parse(result);
   }
 
   public async setObjectInCache(key: string, value: any): Promise<any> {
-    console.log('CacheService.setObjectInCache()', key, value);
     const valueInString = JSON.stringify(value);
     await this.cacheManager.set(key, valueInString);
   }

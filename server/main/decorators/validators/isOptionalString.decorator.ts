@@ -6,6 +6,8 @@ export const IsOptionalString = () => {
   return applyDecorators(
     IsOptional(),
     IsString(),
-    Field(),
+    Field({
+        nullable: true
+    }),
   );
 };

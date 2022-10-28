@@ -40,8 +40,12 @@ export class DatabaseUserRepository implements IUserRepository {
     return this.userEntityRepository.save({ ...user, id });
   }
 
-  public async delete(id: string): Promise<void> {
-    this.userEntityRepository.delete(id);
-    return;
+  public async delete(id: string): Promise<any> {
+    const user = await this.userEntityRepository.findOneById(id)
+
+    if (user) {
+        this.userEntityRepository.delete(id)
+        return user;
+    }
   }
 }
