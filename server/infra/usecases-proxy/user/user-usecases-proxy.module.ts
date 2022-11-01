@@ -1,24 +1,26 @@
-import { BcryptService } from '../../services/bcrypt/bcrypt.service';
-import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
 import { DynamicModule, Module } from '@nestjs/common';
+import { JwtModule } from 'server/infra/services/jwt/jwt.module';
+import { JwtTokenService } from 'server/infra/services/jwt/jwt.service';
 import {
   CreateUserUseCase,
   DeleteUserUseCase,
   FindAllUserUseCase,
   FindOneUserUseCase,
   FindUserByKeyUseCase,
-  UpdateUserUseCase,
+  UpdateUserUseCase
 } from '../../../domain/use-cases/user';
-import { UseCaseProxy } from '../usecase-proxy';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
+import { CacheConfigModule } from '../../config/redis/cache.module';
+import { CacheService } from '../../config/redis/cache.service';
+import { ExceptionsModule } from '../../exceptions/exceptions.module';
+import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
 import { RepositoriesModule } from '../../repositories/repositories.module';
 import { DatabaseUserRepository } from '../../repositories/user.repository';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
-import { CacheConfigModule } from '../../config/redis/cache.module';
-import { CacheService } from '../../config/redis/cache.service';
+import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
+import { BcryptService } from '../../services/bcrypt/bcrypt.service';
+import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { CacheService } from '../../config/redis/cache.service';
     BcryptModule,
     ExceptionsModule,
     CacheConfigModule,
+    JwtModule
   ],
 })
 export class UserUsecasesProxyModule {
@@ -84,27 +87,30 @@ export class UserUsecasesProxyModule {
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, BcryptService],
+          inject: [LoggerService, DatabaseUserRepository, BcryptService, JwtTokenService, ExceptionsService],
           provide: UserUsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
             bcryptService: BcryptService,
+            jwtService: JwtTokenService,
+            exceptionService: ExceptionsService
           ) =>
             new UseCaseProxy(
-              new CreateUserUseCase(logger, repository, bcryptService),
+              new CreateUserUseCase(logger, repository, bcryptService, jwtService, exceptionService),
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, BcryptService],
+          inject: [LoggerService, DatabaseUserRepository, BcryptService, ExceptionsService],
           provide: UserUsecasesProxyModule.PUT_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
             bcryptService: BcryptService,
+            exceptionService: ExceptionsService
           ) =>
             new UseCaseProxy(
-              new UpdateUserUseCase(logger, repository, bcryptService),
+              new UpdateUserUseCase(logger, repository, bcryptService, exceptionService),
             ),
         },
         {

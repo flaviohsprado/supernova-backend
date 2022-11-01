@@ -9,12 +9,12 @@ export class DatabaseUserRepository implements IUserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userEntityRepository: Repository<User>,
-  ) {}
+  ) { }
 
   public async findByKey(key: string, value: string): Promise<User> {
-      return await this.userEntityRepository.findOne({
-          where: { [key]: value },
-      });
+    return await this.userEntityRepository.findOne({
+      where: { [key]: value },
+    });
   }
 
   public async findAll(): Promise<User[]> {
@@ -41,11 +41,25 @@ export class DatabaseUserRepository implements IUserRepository {
   }
 
   public async delete(id: string): Promise<any> {
-    const user = await this.userEntityRepository.findOneById(id)
+    const user = await this.userEntityRepository.findOneById(id);
 
     if (user) {
-        this.userEntityRepository.delete(id)
-        return user;
+      this.userEntityRepository.delete(id);
+      return user;
     }
+  }
+
+  public async alreadyExists(
+    key: string,
+    value: string,
+    id?: string,
+  ): Promise<boolean> {
+    const alreadyExists: User = await this.userEntityRepository.findOne({
+      where: { [key]: value },
+    });
+
+    if (alreadyExists && alreadyExists.id !== id) return true;
+
+    return false;
   }
 }

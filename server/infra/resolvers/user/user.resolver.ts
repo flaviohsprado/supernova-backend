@@ -1,17 +1,17 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
-import {HttpCode, Inject, UseGuards} from '@nestjs/common';
-import {UseCaseProxy} from '../../usecases-proxy/usecase-proxy';
+import { HttpCode, Inject } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { User } from '../../../domain/entities/user.entity';
 import {
-    CreateUserUseCase,
-    DeleteUserUseCase,
-    FindAllUserUseCase,
-    FindOneUserUseCase,
-    UpdateUserUseCase,
+  CreateUserUseCase,
+  DeleteUserUseCase,
+  FindAllUserUseCase,
+  FindOneUserUseCase,
+  UpdateUserUseCase
 } from '../../../domain/use-cases/user';
-import {UserUsecasesProxyModule} from '../../usecases-proxy/user/user-usecases-proxy.module';
-import {CreateUserDTO, UpdateUserDTO} from './user.dto';
-import {UserPresenter} from './user.presenter';
-import {User} from '../../../domain/entities/user.entity'
+import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
+import { UserUsecasesProxyModule } from '../../usecases-proxy/user/user-usecases-proxy.module';
+import { CreateUserDTO, UpdateUserDTO } from './user.dto';
+import { UserPresenter } from './user.presenter';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -39,19 +39,17 @@ export class UserResolver {
     return await this.findOneUserUseCase.getInstance().execute(id);
   }
 
-  @Mutation((returns) => User)
-  public async create(@Args('user') user: CreateUserDTO): Promise<UserPresenter> {
-    const createdUser = await this.createUserUseCase
-      .getInstance()
-      .execute(user);
-
-    return new UserPresenter(createdUser);
+  @Mutation((returns) => UserPresenter)
+  public async create(
+    @Args('user') user: CreateUserDTO,
+  ): Promise<UserPresenter> {
+    return await this.createUserUseCase.getInstance().execute(user);
   }
 
   @Mutation((returns) => User)
   public async update(
-      @Args('id') id: string,
-      @Args('user') user: UpdateUserDTO,
+    @Args('id') id: string,
+    @Args('user') user: UpdateUserDTO,
   ): Promise<UserPresenter> {
     return await this.updateUserUseCase.getInstance().execute(id, user);
   }

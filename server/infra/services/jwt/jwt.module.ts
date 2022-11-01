@@ -5,7 +5,7 @@ import { JwtTokenService } from './jwt.service';
 @Module({
   imports: [
     Jwt.register({
-      secret: process.env.JWT_SECRET,
+      secret: String(process.env.JWT_SECRET),
       signOptions: { expiresIn: '24h' },
     }),
   ],

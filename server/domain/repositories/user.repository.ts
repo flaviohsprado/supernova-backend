@@ -11,4 +11,5 @@ export interface IUserRepository {
   create(user: CreateUserDTO): Promise<User>;
   update(id: string, user: UpdateUserDTO): Promise<User>;
   delete(id: string): Promise<User>;
+  alreadyExists(key: string, value: string, id?: string): Promise<boolean>
 }

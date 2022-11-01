@@ -9,11 +9,11 @@ import { Injectable } from '@nestjs/common';
 export class JwtTokenService implements IJwtService {
   constructor(private readonly jwtService: JwtService) {}
 
-  async checkToken(token: string): Promise<any> {
+  public async checkToken(token: string): Promise<any> {
     return await this.jwtService.verifyAsync(token);
   }
 
-  createToken(payload: IJwtServicePayload): string {
+  public createToken(payload: IJwtServicePayload): string {
     return this.jwtService.sign(payload);
   }
 }
