@@ -12,7 +12,7 @@ export class UpdateUserUseCase {
     private readonly repository: IUserRepository,
     private readonly bcryptService: IBcryptService,
     private readonly exceptionService: IExceptionService
-  ) {}
+  ) { }
 
   public async execute(id: string, user: UpdateUserDTO): Promise<User> {
     if (this.repository.alreadyExists('email', user.email, id))
@@ -21,8 +21,11 @@ export class UpdateUserUseCase {
         statusCode: HttpStatus.FORBIDDEN
       })
 
-    if (user.password)
+    if (user.password) {
       user.password = await this.bcryptService.createHash(user.password);
+    } else {
+      delete user.password;
+    }
 
     const updatedUser = await this.repository.update(id, user);
 
