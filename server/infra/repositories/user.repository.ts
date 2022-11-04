@@ -22,13 +22,9 @@ export class DatabaseUserRepository implements IUserRepository {
   }
 
   public async findOne(id: string): Promise<User> {
-    const user = await this.userEntityRepository.findOne({
+    return await this.userEntityRepository.findOne({
       where: { id },
     });
-
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
-
-    return user;
   }
 
   public async create(user: User): Promise<User> {

@@ -26,28 +26,28 @@ export class UserResolver {
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
     @Inject(UserUsecasesProxyModule.DELETE_USER_USECASES_PROXY)
     private readonly deleteUserUseCase: UseCaseProxy<DeleteUserUseCase>,
-  ) {}
+  ) { }
 
   @Query((returns) => [User])
-  public async findAll(): Promise<UserPresenter[]> {
+  public async findAllUser(): Promise<UserPresenter[]> {
     const users = await this.findAllUserUseCase.getInstance().execute();
     return users.map((user) => new UserPresenter(user));
   }
 
   @Query((returns) => User)
-  public async findOne(@Args('id') id: string): Promise<UserPresenter> {
+  public async findOneUser(@Args('id') id: string): Promise<UserPresenter> {
     return await this.findOneUserUseCase.getInstance().execute(id);
   }
 
   @Mutation((returns) => UserPresenter)
-  public async create(
+  public async createUser(
     @Args('user') user: CreateUserDTO,
   ): Promise<UserPresenter> {
     return await this.createUserUseCase.getInstance().execute(user);
   }
 
   @Mutation((returns) => User)
-  public async update(
+  public async updateUser(
     @Args('id') id: string,
     @Args('user') user: UpdateUserDTO,
   ): Promise<UserPresenter> {
@@ -56,7 +56,7 @@ export class UserResolver {
 
   @HttpCode(204)
   @Mutation((returns) => User)
-  public async delete(@Args('id') id: string): Promise<User> {
+  public async deleteUser(@Args('id') id: string): Promise<User> {
     return await this.deleteUserUseCase.getInstance().execute(id);
   }
 }

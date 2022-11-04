@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
-import { Column } from 'typeorm';
+import { Column, ColumnOptions } from 'typeorm';
 
-export const IsOptionalNumberColumn = () => {
+export const IsOptionalNumberColumn = (props?: ColumnOptions) => {
   return applyDecorators(
     Column({
       type: 'decimal',
@@ -14,6 +14,7 @@ export const IsOptionalNumberColumn = () => {
         },
       },
       nullable: true,
+      ...props
     }),
   );
 };
