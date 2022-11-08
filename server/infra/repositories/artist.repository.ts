@@ -12,12 +12,15 @@ export class DatabaseArtistRepository implements IArtistRepository {
     ) { }
 
     public async findAll(): Promise<Artist[]> {
-        return this.artistEntityRepository.find();
+        return this.artistEntityRepository.find({
+            relations: ['albums'],
+        });
     }
 
     public async findOne(id: string): Promise<Artist> {
         return await this.artistEntityRepository.findOne({
             where: { id },
+            relations: ['albums'],
         });
     }
 
@@ -32,11 +35,11 @@ export class DatabaseArtistRepository implements IArtistRepository {
     }
 
     public async delete(id: string): Promise<any> {
-        const user = await this.artistEntityRepository.findOneById(id);
+        const artist = await this.artistEntityRepository.find({ where: { id } });
 
-        if (user) {
+        if (artist) {
             this.artistEntityRepository.delete(id);
-            return user;
+            return artist;
         }
     }
 }

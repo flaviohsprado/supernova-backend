@@ -25,9 +25,6 @@ import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecas
         GraphqlConfigModule,
         EnvironmentConfigModule,
         ResolversModule,
-        UserUsecasesProxyModule.register(),
-        AuthUsecasesProxyModule.register(),
-        ArtistUsecasesProxyModule.register()
     ],
     providers: [
         {
