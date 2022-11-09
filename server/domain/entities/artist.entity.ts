@@ -1,7 +1,8 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { IsOptionalNumberColumn } from "server/main/decorators/columns/isOptionalnumberColumn.decorator";
 import { IsRequiredStringColumn } from "server/main/decorators/columns/isRequiredStringColumn.decorator";
-import { CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Album } from "./album.entity";
 
 @ObjectType()
 @Entity()
@@ -25,4 +26,12 @@ export class Artist {
     @Field()
     @UpdateDateColumn()
     public updatedAt: Date;
+
+    @Field(() => [Album])
+    @OneToMany(() => Album, (album) => album.artist, {
+        cascade: true,
+        onDelete: 'CASCADE',
+        nullable: true,
+    })
+    public albums?: Album[];
 }

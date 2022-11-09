@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Album } from 'server/domain/entities/album.entity';
 import { Artist } from 'server/domain/entities/artist.entity';
-import { User } from '../../../domain/entities/user.entity';
 
 @ObjectType()
 export class ArtistPresenter {
@@ -18,6 +18,9 @@ export class ArtistPresenter {
 
     @Field()
     public updatedAt?: Date;
+
+    @Field(() => [Album])
+    public albums?: Album[];
 
     constructor(artist: Artist) {
         Object.assign(this, artist);
