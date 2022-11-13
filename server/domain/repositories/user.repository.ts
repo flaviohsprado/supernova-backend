@@ -3,6 +3,7 @@ import {
   CreateUserDTO,
   UpdateUserDTO,
 } from '../../infra/resolvers/user/user.dto';
+import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
 
 export interface IUserRepository {
   findAll(): Promise<User[]>;

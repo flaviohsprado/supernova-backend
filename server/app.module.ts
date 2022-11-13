@@ -11,9 +11,6 @@ import { LoggerModule } from "./infra/logger/logger.module";
 import { ResolversModule } from "./infra/resolvers/resolvers.module";
 import { BcryptModule } from "./infra/services/bcrypt/bcrypt.module";
 import { JwtModule } from "./infra/services/jwt/jwt.module";
-import { ArtistUsecasesProxyModule } from './infra/usecases-proxy/artist/artist-usecases-proxy.module';
-import { AuthUsecasesProxyModule } from "./infra/usecases-proxy/auth/auth-usecases-proxy.module";
-import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecases-proxy.module";
 
 @Module({
     imports: [
@@ -35,6 +32,10 @@ import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecas
             provide: 'APP_INTERCEPTOR',
             useClass: TransformResponseInterceptor,
         },
+        /*{
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
+        },*/
         LocalStrategy,
         JwtStrategy,
     ]

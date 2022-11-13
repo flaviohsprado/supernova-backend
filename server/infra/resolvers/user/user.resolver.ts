@@ -10,6 +10,7 @@ import {
 } from '../../../domain/use-cases/user';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
 import { UserUsecasesProxyModule } from '../../usecases-proxy/user/user-usecases-proxy.module';
+import { CreateFileDTO } from '../file/file.dto';
 import { CreateUserDTO, UpdateUserDTO } from './user.dto';
 import { UserPresenter } from './user.presenter';
 
@@ -28,6 +29,11 @@ export class UserResolver {
     private readonly deleteUserUseCase: UseCaseProxy<DeleteUserUseCase>,
   ) { }
 
+  @Query((returns) => User)
+  public async findUser(@Args('id') id: string): Promise<UserPresenter> {
+    return await this.findOneUserUseCase.getInstance().execute(id);
+  }
+
   @Query((returns) => [User])
   public async findAllUser(): Promise<UserPresenter[]> {
     const users = await this.findAllUserUseCase.getInstance().execute();
@@ -42,16 +48,18 @@ export class UserResolver {
   @Mutation((returns) => UserPresenter)
   public async createUser(
     @Args('user') user: CreateUserDTO,
+    @Args('file') file: CreateFileDTO,
   ): Promise<UserPresenter> {
-    return await this.createUserUseCase.getInstance().execute(user);
+    return await this.createUserUseCase.getInstance().execute(user, file);
   }
 
   @Mutation((returns) => User)
   public async updateUser(
     @Args('id') id: string,
     @Args('user') user: UpdateUserDTO,
+    @Args('file') file: CreateFileDTO,
   ): Promise<UserPresenter> {
-    return await this.updateUserUseCase.getInstance().execute(id, user);
+    return await this.updateUserUseCase.getInstance().execute(id, user, file);
   }
 
   @HttpCode(204)

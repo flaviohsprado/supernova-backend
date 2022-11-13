@@ -1,4 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
 import { JwtModule } from 'server/infra/services/jwt/jwt.module';
 import { JwtTokenService } from 'server/infra/services/jwt/jwt.service';
 import {
@@ -87,30 +88,32 @@ export class UserUsecasesProxyModule {
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, BcryptService, JwtTokenService, ExceptionsService],
+          inject: [LoggerService, DatabaseUserRepository, DatabaseFileRepository, BcryptService, JwtTokenService, ExceptionsService],
           provide: UserUsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
+            fileRepository: DatabaseFileRepository,
             bcryptService: BcryptService,
             jwtService: JwtTokenService,
             exceptionService: ExceptionsService
           ) =>
             new UseCaseProxy(
-              new CreateUserUseCase(logger, repository, bcryptService, jwtService, exceptionService),
+              new CreateUserUseCase(logger, repository, fileRepository, bcryptService, jwtService, exceptionService),
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, BcryptService, ExceptionsService],
+          inject: [LoggerService, DatabaseUserRepository, DatabaseFileRepository, BcryptService, ExceptionsService],
           provide: UserUsecasesProxyModule.PUT_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
+            fileRepository: DatabaseFileRepository,
             bcryptService: BcryptService,
             exceptionService: ExceptionsService
           ) =>
             new UseCaseProxy(
-              new UpdateUserUseCase(logger, repository, bcryptService, exceptionService),
+              new UpdateUserUseCase(logger, repository, fileRepository, bcryptService, exceptionService),
             ),
         },
         {

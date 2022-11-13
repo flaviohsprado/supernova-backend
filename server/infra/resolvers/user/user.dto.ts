@@ -1,6 +1,8 @@
-import { InputType } from '@nestjs/graphql';
-import {IsRequiredString} from "../../../main/decorators/validators/isRequiredString.decorator";
-import {IsOptionalString} from "../../../main/decorators/validators/isOptionalString.decorator";
+import { Field, InputType } from '@nestjs/graphql';
+import { IsRequiredString } from "../../../main/decorators/validators/isRequiredString.decorator";
+import { IsOptionalString } from "../../../main/decorators/validators/isOptionalString.decorator";
+import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import { CreateFileDTO } from '../file/file.dto';
 
 @InputType()
 export class CreateUserDTO {
