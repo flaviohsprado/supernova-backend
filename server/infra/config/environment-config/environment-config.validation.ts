@@ -4,7 +4,7 @@ import {
   IsEnum,
   IsNumber,
   IsString,
-  validateSync,
+  validateSync
 } from 'class-validator';
 
 enum Environment {
@@ -17,6 +17,9 @@ enum Environment {
 class EnvironmentVariables {
   @IsEnum(Environment)
   public ENVIRONMENT: Environment;
+
+  @IsBoolean()
+  public CLOUD_UPLOAD: boolean;
 
   @IsString()
   public JWT_SECRET: string;
@@ -41,6 +44,12 @@ class EnvironmentVariables {
 
   @IsBoolean()
   public DATABASE_SYNCHRONIZE: boolean;
+
+  @IsString()
+  public REDIS_HOST: string;
+
+  @IsNumber()
+  public REDIS_PORT: number;
 }
 
 export function validate(config: Record<string, unknown>) {

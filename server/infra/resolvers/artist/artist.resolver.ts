@@ -51,11 +51,7 @@ export class ArtistResolver {
         @Args('id') id: string,
         @Args('artist') artist: UpdateArtistDTO,
     ): Promise<ArtistPresenter> {
-        const updatedArtist = await this.updateArtistUseCase.getInstance().execute(id, artist);
-
-        console.log('updatedArtist', updatedArtist);
-
-        return updatedArtist
+        return await this.updateArtistUseCase.getInstance().execute(id, artist);
     }
 
     @HttpCode(204)

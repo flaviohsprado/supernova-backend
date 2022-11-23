@@ -1,7 +1,8 @@
 import { Field, ObjectType } from "@nestjs/graphql";
+// @ts-ignore
+import { GraphQLUpload } from "graphql-upload";
 import { IsOptionalStringColumn } from "server/main/decorators/columns/isOptionalStringColumn.decorator";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 
 @ObjectType()
 @Entity()
@@ -14,11 +15,11 @@ export class File {
     @IsOptionalStringColumn()
     public originalname?: string;
 
-    @Field()
+    @Field({ nullable: true })
     @IsOptionalStringColumn()
     public ownerId: string;
 
-    @Field()
+    @Field({ nullable: true })
     @IsOptionalStringColumn()
     public ownerType: string;
 

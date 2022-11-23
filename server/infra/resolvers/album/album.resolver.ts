@@ -37,9 +37,7 @@ export class AlbumResolver {
     @Query((returns) => Album)
     public async findOneAlbum(@Args('id') id: string): Promise<AlbumPresenter> {
         const album = await this.findOneAlbumUseCase.getInstance().execute(id);
-        const converted = new AlbumPresenter(album);
-        console.log(converted);
-        return converted;
+        return new AlbumPresenter(album);
     }
 
     @Mutation((returns) => AlbumPresenter)

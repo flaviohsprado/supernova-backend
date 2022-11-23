@@ -1,35 +1,36 @@
 import { Field, InputType } from "@nestjs/graphql";
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import { IsRequiredString } from "server/main/decorators/validators/isRequiredString.decorator";
+// @ts-ignore
+import { GraphQLUpload } from "graphql-upload";
+import { IsOptionalString } from "server/main/decorators/validators/isOptionalString.decorator";
 
 @InputType()
 export class CreateFileDTO {
-    @IsRequiredString()
-    ownerId: string;
+    @IsOptionalString()
+    ownerId?: string;
 
-    @IsRequiredString()
-    ownerType: string;
+    @IsOptionalString()
+    ownerType?: string;
 
-    @IsRequiredString()
-    fieldname: string;
+    @IsOptionalString()
+    fieldname?: string;
 
-    @IsRequiredString()
-    originalname: string;
+    @IsOptionalString()
+    originalname?: string;
 
-    @IsRequiredString()
-    encoding: string;
+    @IsOptionalString()
+    encoding?: string;
 
-    @IsRequiredString()
-    mimetype: string;
+    @IsOptionalString()
+    mimetype?: string;
 
-    @IsRequiredString()
-    key: string;
+    @IsOptionalString()
+    key?: string;
 
-    @IsRequiredString()
-    url: string;
+    @IsOptionalString()
+    url?: string;
 
     @Field(() => GraphQLUpload)
-    buffer: Uint8Array;
+    buffer?: Uint8Array;
 
     constructor(props: CreateFileDTO) {
         Object.assign(this, props);
