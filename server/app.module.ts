@@ -1,5 +1,7 @@
 import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
+import { GraphqlAuthGuard } from './infra/commons/guards/graphql-jwt-auth.guard';
 import { TransformResponseInterceptor } from "./infra/commons/interceptors/transformResponse.interceptor";
 import { LoggerMiddleware } from "./infra/commons/middlewares/checkGraphQLPlayground.middleware";
 import { JwtStrategy } from "./infra/commons/strategies/jwt.strategy";
@@ -11,9 +13,7 @@ import { LoggerModule } from "./infra/logger/logger.module";
 import { ResolversModule } from "./infra/resolvers/resolvers.module";
 import { BcryptModule } from "./infra/services/bcrypt/bcrypt.module";
 import { JwtModule } from "./infra/services/jwt/jwt.module";
-import { ArtistUsecasesProxyModule } from './infra/usecases-proxy/artist/artist-usecases-proxy.module';
-import { AuthUsecasesProxyModule } from "./infra/usecases-proxy/auth/auth-usecases-proxy.module";
-import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecases-proxy.module";
+import { S3ConfigModule } from './infra/services/s3/s3.module';
 
 @Module({
     imports: [
@@ -25,6 +25,7 @@ import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecas
         GraphqlConfigModule,
         EnvironmentConfigModule,
         ResolversModule,
+        S3ConfigModule
     ],
     providers: [
         {
@@ -35,8 +36,12 @@ import { UserUsecasesProxyModule } from "./infra/usecases-proxy/user/user-usecas
             provide: 'APP_INTERCEPTOR',
             useClass: TransformResponseInterceptor,
         },
+        {
+            provide: APP_GUARD,
+            useClass: GraphqlAuthGuard,
+        },
         LocalStrategy,
-        JwtStrategy,
+        JwtStrategy
     ]
 })
 export class AppModule implements NestModule {

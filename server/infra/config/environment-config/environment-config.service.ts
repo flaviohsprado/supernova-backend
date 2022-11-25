@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AmbientConfig } from '../../../domain/config/ambient.interface';
 import { DatabaseConfig } from '../../../domain/config/database.interface';
 import { JWTConfig } from '../../../domain/config/jwt.interface';
-import { AmbientConfig } from '../../../domain/config/ambient.interface';
 import { RedisConfig } from '../../../domain/config/redis.interface';
 import { S3Config } from '../../../domain/config/s3.interface';
 
@@ -24,6 +24,10 @@ export class EnvironmentConfigService
   //AMBIENT
   public getEnvironment(): string {
     return this.configService.get<string>('ENVIRONMENT');
+  }
+
+  public getCloudUpload(): boolean {
+    return this.configService.get<boolean>('CLOUD_UPLOAD');
   }
 
   //S3

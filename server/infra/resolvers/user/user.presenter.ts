@@ -1,24 +1,28 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { File } from 'server/domain/entities/file.entity';
 import { User } from '../../../domain/entities/user.entity';
 
 @ObjectType()
 export class UserPresenter {
-  @Field()
+  @Field({ nullable: true })
   public id: string;
-  
-  @Field()
+
+  @Field({ nullable: true })
   public username: string;
 
-  @Field()
+  @Field({ nullable: true })
   public email: string;
 
-  @Field()
+  @Field({ nullable: true })
   public accessToken?: string;
 
-  @Field()
+  @Field(() => File, { nullable: true })
+  public file?: File
+
+  @Field({ nullable: true })
   public createdAt?: Date;
 
-  @Field()
+  @Field({ nullable: true })
   public updatedAt?: Date;
 
   constructor(user: User) {

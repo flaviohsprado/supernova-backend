@@ -1,12 +1,17 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
+import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
 import { JwtModule } from 'server/infra/services/jwt/jwt.module';
 import { JwtTokenService } from 'server/infra/services/jwt/jwt.service';
+import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
+import { S3Service } from 'server/infra/services/s3/s3.service';
 import {
   CreateUserUseCase,
   DeleteUserUseCase,
   FindAllUserUseCase,
   FindOneUserUseCase,
   FindUserByKeyUseCase,
+  UpdateUserFileUseCase,
   UpdateUserUseCase
 } from '../../../domain/use-cases/user';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
@@ -30,7 +35,8 @@ import { UseCaseProxy } from '../usecase-proxy';
     BcryptModule,
     ExceptionsModule,
     CacheConfigModule,
-    JwtModule
+    JwtModule,
+    S3ConfigModule
   ],
 })
 export class UserUsecasesProxyModule {
@@ -38,8 +44,9 @@ export class UserUsecasesProxyModule {
   static GET_USERS_USECASES_PROXY = 'getUsersUsecasesProxy';
   static FIND_USER_BY_KEY_USECASES_PROXY = 'findUserByKeyUsecasesProxy';
   static POST_USER_USECASES_PROXY = 'postUserUsecasesProxy';
-  static DELETE_USER_USECASES_PROXY = 'deleteUserUsecasesProxy';
   static PUT_USER_USECASES_PROXY = 'putUserUsecasesProxy';
+  static PUT_USER_FILE_USECASES_PROXY = 'putUserFileUsecasesProxy';
+  static DELETE_USER_USECASES_PROXY = 'deleteUserUsecasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -87,18 +94,20 @@ export class UserUsecasesProxyModule {
             ),
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, BcryptService, JwtTokenService, ExceptionsService],
+          inject: [LoggerService, DatabaseUserRepository, DatabaseFileRepository, BcryptService, JwtTokenService, ExceptionsService, S3Service, EnvironmentConfigService],
           provide: UserUsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
+            fileRepository: DatabaseFileRepository,
             bcryptService: BcryptService,
             jwtService: JwtTokenService,
-            exceptionService: ExceptionsService
+            exceptionService: ExceptionsService,
+            s3Service: S3Service,
+            config: EnvironmentConfigService,
           ) =>
             new UseCaseProxy(
-              new CreateUserUseCase(logger, repository, bcryptService, jwtService, exceptionService),
-            ),
+              new CreateUserUseCase(logger, repository, fileRepository, bcryptService, jwtService, exceptionService, s3Service, config)),            
         },
         {
           inject: [LoggerService, DatabaseUserRepository, BcryptService, ExceptionsService],
@@ -107,20 +116,35 @@ export class UserUsecasesProxyModule {
             logger: LoggerService,
             repository: DatabaseUserRepository,
             bcryptService: BcryptService,
-            exceptionService: ExceptionsService
+            exceptionService: ExceptionsService,
           ) =>
             new UseCaseProxy(
-              new UpdateUserUseCase(logger, repository, bcryptService, exceptionService),
-            ),
+              new UpdateUserUseCase(logger, repository, bcryptService, exceptionService)),            
         },
         {
-          inject: [LoggerService, DatabaseUserRepository, ExceptionsService],
+          inject: [LoggerService, DatabaseUserRepository, DatabaseFileRepository, S3Service, EnvironmentConfigService],
+          provide: UserUsecasesProxyModule.PUT_USER_FILE_USECASES_PROXY,
+          useFactory: (
+            logger: LoggerService,
+            repository: DatabaseUserRepository,
+            fileRepository: DatabaseFileRepository,
+            s3Service: S3Service,
+            config: EnvironmentConfigService,
+          ) =>
+            new UseCaseProxy(
+              new UpdateUserFileUseCase(logger, repository, fileRepository, s3Service, config)),
+        },
+        {
+          inject: [LoggerService, DatabaseUserRepository, ExceptionsService, S3Service, EnvironmentConfigService, DatabaseFileRepository],
           provide: UserUsecasesProxyModule.DELETE_USER_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             repository: DatabaseUserRepository,
-            exceptionService: ExceptionsService
-          ) => new UseCaseProxy(new DeleteUserUseCase(logger, repository, exceptionService)),
+            exceptionService: ExceptionsService,
+            s3Service: S3Service,
+            config: EnvironmentConfigService,
+            fileRepository: DatabaseFileRepository,
+          ) => new UseCaseProxy(new DeleteUserUseCase(logger, repository, exceptionService, s3Service, config, fileRepository)),
         },
       ],
       exports: [
@@ -129,6 +153,7 @@ export class UserUsecasesProxyModule {
         UserUsecasesProxyModule.FIND_USER_BY_KEY_USECASES_PROXY,
         UserUsecasesProxyModule.POST_USER_USECASES_PROXY,
         UserUsecasesProxyModule.PUT_USER_USECASES_PROXY,
+        UserUsecasesProxyModule.PUT_USER_FILE_USECASES_PROXY,
         UserUsecasesProxyModule.DELETE_USER_USECASES_PROXY,
       ],
     };

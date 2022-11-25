@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
@@ -12,7 +12,7 @@ import { GraphQLModule } from '@nestjs/graphql';
       },
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({req}) => ({req})
+      context: ({req}) => ({req}),      
     }),
   ],
 })

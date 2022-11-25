@@ -1,5 +1,6 @@
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { Inject, UseGuards } from '@nestjs/common';
+import { Public } from 'server/main/decorators/isPublicRoute.decorator';
 import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
 import { AuthUsecasesProxyModule } from '../../usecases-proxy/auth/auth-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
@@ -14,7 +15,8 @@ export class AuthResolver {
   ) {}
 
   @Mutation((returns) => AuthPresenter)
-  async login(
+  @Public()
+  public async login(
     @Args('authCredentials') authCredentials: AuthDTO,
   ): Promise<AuthPresenter> {
     const credentials = new AuthDTO(authCredentials);

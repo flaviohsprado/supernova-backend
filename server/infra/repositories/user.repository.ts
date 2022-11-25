@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository';
+import { CreateUserDTO } from '../resolvers/user/user.dto';
 
 @Injectable()
 export class DatabaseUserRepository implements IUserRepository {
@@ -14,20 +15,24 @@ export class DatabaseUserRepository implements IUserRepository {
   public async findByKey(key: string, value: string): Promise<User> {
     return await this.userEntityRepository.findOne({
       where: { [key]: value },
+      relations: ['file'],
     });
   }
 
   public async findAll(): Promise<User[]> {
-    return this.userEntityRepository.find();
+    return this.userEntityRepository.find({
+      relations: ['file'],
+    });
   }
 
   public async findOne(id: string): Promise<User> {
     return await this.userEntityRepository.findOne({
       where: { id },
+      relations: ['file'],
     });
   }
 
-  public async create(user: User): Promise<User> {
+  public async create(user: CreateUserDTO): Promise<User> {
     const newUser = this.userEntityRepository.create(user);
     return this.userEntityRepository.save(newUser);
   }
@@ -37,7 +42,7 @@ export class DatabaseUserRepository implements IUserRepository {
   }
 
   public async delete(id: string): Promise<any> {
-    const user = await this.userEntityRepository.findOneById(id);
+    const user = await this.userEntityRepository.findOne({ where: { id } });
 
     if (user) {
       this.userEntityRepository.delete(id);
@@ -50,6 +55,8 @@ export class DatabaseUserRepository implements IUserRepository {
     value: string,
     id?: string,
   ): Promise<boolean> {
+    if (!value) return false;
+    
     const alreadyExists: User = await this.userEntityRepository.findOne({
       where: { [key]: value },
     });
