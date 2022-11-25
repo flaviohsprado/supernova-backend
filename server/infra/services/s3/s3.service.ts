@@ -17,6 +17,7 @@ export class S3Service implements IUploadService {
             Key: file.key,
             Body: file.buffer,
             ContentType: file.mimetype,
+            ServerSideEncryption: 'AES256',
         }).promise();
 
         return fileUploaded.then((data) => {

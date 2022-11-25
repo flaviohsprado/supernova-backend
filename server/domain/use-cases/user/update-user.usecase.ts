@@ -15,7 +15,7 @@ export class UpdateUserUseCase {
   ) { }
 
   public async execute(id: string, user: UpdateUserDTO): Promise<User> {
-    if (this.repository.alreadyExists('email', user.email, id))
+    if (await this.repository.alreadyExists('email', user.email, id))
       this.exceptionService.throwForbiddenException({
         message: 'Email already exists in app!',
         statusCode: HttpStatus.FORBIDDEN
