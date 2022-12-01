@@ -1,3 +1,3 @@
 export interface AmbientConfig {
-  getEnvironment(): string;
+	getEnvironment(): string;
 }

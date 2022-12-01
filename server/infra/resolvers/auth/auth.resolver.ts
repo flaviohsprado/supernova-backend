@@ -9,17 +9,17 @@ import { AuthPresenter } from './auth.presenter';
 
 @Resolver()
 export class AuthResolver {
-  constructor(
-    @Inject(AuthUsecasesProxyModule.LOGIN_USECASES_PROXY)
-    private readonly loginUseCase: UseCaseProxy<LoginUseCase>,
-  ) {}
+	constructor(
+		@Inject(AuthUsecasesProxyModule.LOGIN_USECASES_PROXY)
+		private readonly loginUseCase: UseCaseProxy<LoginUseCase>,
+	) {}
 
-  @Mutation((returns) => AuthPresenter)
-  @Public()
-  public async login(
-    @Args('authCredentials') authCredentials: AuthDTO,
-  ): Promise<AuthPresenter> {
-    const credentials = new AuthDTO(authCredentials);
-    return this.loginUseCase.getInstance().execute(credentials);
-  }
+	@Mutation((returns) => AuthPresenter)
+	@Public()
+	public async login(
+		@Args('authCredentials') authCredentials: AuthDTO,
+	): Promise<AuthPresenter> {
+		const credentials = new AuthDTO(authCredentials);
+		return this.loginUseCase.getInstance().execute(credentials);
+	}
 }

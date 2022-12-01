@@ -6,18 +6,18 @@ import { SetupInterceptor } from './infra/commons/utils/setupInterceptorFor.setu
 import { SetupPipeFor } from './infra/commons/utils/setupPipeFor.setup';
 
 async function bootstrap() {
-  const port = process.env.PORT || 3010;
+	const port = process.env.PORT || 3010;
 
-  const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule);
 
-  SetupInterceptor.for(app);
+	SetupInterceptor.for(app);
 
-  SetupPipeFor.for(app);
+	SetupPipeFor.for(app);
 
-  SetupContainerFor.for(app, AppModule);
+	SetupContainerFor.for(app, AppModule);
 
-  SetupGraphqlFor.for(app);
+	SetupGraphqlFor.for(app);
 
-  await app.listen(port);
+	await app.listen(port);
 }
 bootstrap();

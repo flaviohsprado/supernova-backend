@@ -1,5 +1,5 @@
-import { IClientUploadConfig } from "./clientUploadConfig.interface";
+import { IClientUploadConfig } from './clientUploadConfig.interface';
 
 export interface IS3Config extends IClientUploadConfig {
-    region: string;
+	region: string;
 }

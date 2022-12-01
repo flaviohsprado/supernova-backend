@@ -1,4 +1,4 @@
 export interface RedisConfig {
-  getRedisHost(): string;
-  getRedisPort(): number;
+	getRedisHost(): string;
+	getRedisPort(): number;
 }

@@ -4,19 +4,19 @@ import { ILogger } from '../../logger/logger.interface';
 import { IArtistRepository } from '../../repositories/artist.repository';
 
 export class UpdateArtistUseCase {
-  constructor(
-    private readonly logger: ILogger,
-    private readonly repository: IArtistRepository,
-  ) { }
+	constructor(
+		private readonly logger: ILogger,
+		private readonly repository: IArtistRepository,
+	) {}
 
-  public async execute(id: string, artist: UpdateArtistDTO): Promise<Artist> {
-    const updatedArtist = await this.repository.update(id, artist);
+	public async execute(id: string, artist: UpdateArtistDTO): Promise<Artist> {
+		const updatedArtist = await this.repository.update(id, artist);
 
-    this.logger.log(
-      'UpdateArtistUseCases execute()',
-      `Artist ${id} have been updated`,
-    );
+		this.logger.log(
+			'UpdateArtistUseCases execute()',
+			`Artist ${id} have been updated`,
+		);
 
-    return updatedArtist;
-  }
+		return updatedArtist;
+	}
 }

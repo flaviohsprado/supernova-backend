@@ -3,22 +3,22 @@ import { IAlbumRepository } from '../../repositories/album.repository';
 import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindAllAlbumUseCase {
-  constructor(
-    private readonly repository: IAlbumRepository,
-    private readonly cacheManager: ICacheManager,
-  ) { }
+	constructor(
+		private readonly repository: IAlbumRepository,
+		private readonly cacheManager: ICacheManager,
+	) {}
 
-  public async execute(): Promise<Album[]> {
-    const cachedAlbums = await this.cacheManager.getCachedObject<Album[]>(
-      'albums',
-    );
+	public async execute(): Promise<Album[]> {
+		const cachedAlbums = await this.cacheManager.getCachedObject<Album[]>(
+			'albums',
+		);
 
-    if (cachedAlbums) return cachedAlbums;
+		if (cachedAlbums) return cachedAlbums;
 
-    const albums = await this.repository.findAll();
+		const albums = await this.repository.findAll();
 
-    await this.cacheManager.setObjectInCache('albums', albums);
+		await this.cacheManager.setObjectInCache('albums', albums);
 
-    return albums;
-  }
+		return albums;
+	}
 }
