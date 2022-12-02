@@ -4,7 +4,7 @@ import { IsRequiredString } from '../../../main/decorators/validators/isRequired
 @InputType()
 export class AuthDTO {
 	@IsRequiredString()
-	public username: string;
+	public email: string;
 
 	@IsRequiredString()
 	public password: string;
