@@ -1,11 +1,11 @@
-import { AuthPresenter } from '../../../infra/resolvers/auth/auth.presenter';
 import { AuthDTO } from '../../../infra/resolvers/auth/auth.dto';
-import { ILogger } from '../../logger/logger.interface';
-import { IJwtService } from '../../interfaces/jwt.interface';
+import { AuthPresenter } from '../../../infra/resolvers/auth/auth.presenter';
+import { User } from '../../entities/user.entity';
 import { IBcryptService } from '../../interfaces/bcrypt.interface';
 import { IExceptionService } from '../../interfaces/exceptions.interface';
+import { IJwtService } from '../../interfaces/jwt.interface';
+import { ILogger } from '../../logger/logger.interface';
 import { IUserRepository } from '../../repositories/user.repository';
-import { User } from '../../entities/user.entity';
 
 export class LoginUseCase {
 	constructor(
@@ -18,12 +18,13 @@ export class LoginUseCase {
 
 	public async execute(credentials: AuthDTO): Promise<AuthPresenter> {
 		const userValidated: Omit<User, 'password'> = await this.validateUser(
-			credentials.username,
+			credentials.email,
 			credentials.password,
 		);
 		const accessToken = this.jwtService.createToken({
 			id: userValidated.id,
 			username: userValidated.username,
+			avatar: userValidated.file ? userValidated.file.url : null,
 		});
 
 		this.logger.log(`LoginUseCases execute()`, `User have been logged in!`);
@@ -31,8 +32,8 @@ export class LoginUseCase {
 		return new AuthPresenter({ accessToken });
 	}
 
-	private async validateUser(username: string, password: string) {
-		const user = await this.userRepository.findByKey('username', username);
+	private async validateUser(email: string, password: string) {
+		const user = await this.userRepository.findByKey('email', email);
 
 		if (!user)
 			this.exceptionService.throwNotFoundException({

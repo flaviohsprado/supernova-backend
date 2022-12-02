@@ -45,6 +45,7 @@ export class CreateUserUseCase {
 		createdUser.accessToken = this.jwtService.createToken({
 			id: createdUser.id,
 			username: createdUser.username,
+			avatar: file ? createdUser.file.url : null,
 		});
 
 		this.logger.log(
