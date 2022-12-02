@@ -6,23 +6,23 @@ import { IS_PUBLIC_KEY } from 'server/main/decorators/isPublicRoute.decorator';
 
 @Injectable()
 export class GraphqlAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
-    super();
-  }
-  
-  getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
-  }
+	constructor(private reflector: Reflector) {
+		super();
+	}
 
-  canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+	getRequest(context: ExecutionContext) {
+		const ctx = GqlExecutionContext.create(context);
+		return ctx.getContext().req;
+	}
 
-    if (isPublic) return true;
+	canActivate(context: ExecutionContext) {
+		const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+			context.getHandler(),
+			context.getClass(),
+		]);
 
-    return super.canActivate(context);
-  }
+		if (isPublic) return true;
+
+		return super.canActivate(context);
+	}
 }

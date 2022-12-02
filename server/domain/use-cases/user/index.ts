@@ -5,4 +5,3 @@ export * from './find-one-user.usecase';
 export * from './find-user-by-key.usecase';
 export * from './update-user-file.usecase';
 export * from './update-user.usecase';
-

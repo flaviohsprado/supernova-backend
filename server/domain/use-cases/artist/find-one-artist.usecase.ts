@@ -4,26 +4,28 @@ import { ICacheManager } from '../../interfaces/cache.interface';
 import { IExceptionService } from '../../interfaces/exceptions.interface';
 
 export class FindOneArtistUseCase {
-    constructor(
-        private readonly repository: IArtistRepository,
-        private readonly exceptionService: IExceptionService,
-        private readonly cacheManager: ICacheManager,
-    ) { }
+	constructor(
+		private readonly repository: IArtistRepository,
+		private readonly exceptionService: IExceptionService,
+		private readonly cacheManager: ICacheManager,
+	) {}
 
-    public async execute(id: string): Promise<Artist> {
-        const cachedArtist = await this.cacheManager.getCachedObject<Artist>('artist');
+	public async execute(id: string): Promise<Artist> {
+		const cachedArtist = await this.cacheManager.getCachedObject<Artist>(
+			'artist',
+		);
 
-        if (cachedArtist) return cachedArtist;
+		if (cachedArtist) return cachedArtist;
 
-        const artist: Artist = await this.repository.findOne(id);
+		const artist: Artist = await this.repository.findOne(id);
 
-        if (!artist)
-            this.exceptionService.throwNotFoundException({
-                message: 'Artist not found',
-            });
+		if (!artist)
+			this.exceptionService.throwNotFoundException({
+				message: 'Artist not found',
+			});
 
-        await this.cacheManager.setObjectInCache('artist', artist);
+		await this.cacheManager.setObjectInCache('artist', artist);
 
-        return artist;
-    }
+		return artist;
+	}
 }

@@ -14,50 +14,50 @@ import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
 import { JwtModule } from '../../services/jwt/jwt.module';
 
 @Module({
-  imports: [
-    LoggerModule,
-    EnvironmentConfigModule,
-    RepositoriesModule,
-    ExceptionsModule,
-    BcryptModule,
-    JwtModule,
-  ],
+	imports: [
+		LoggerModule,
+		EnvironmentConfigModule,
+		RepositoriesModule,
+		ExceptionsModule,
+		BcryptModule,
+		JwtModule,
+	],
 })
 export class AuthUsecasesProxyModule {
-  static LOGIN_USECASES_PROXY = 'loginUsecasesProxy';
+	static LOGIN_USECASES_PROXY = 'loginUsecasesProxy';
 
-  static register(): DynamicModule {
-    return {
-      module: AuthUsecasesProxyModule,
-      providers: [
-        {
-          inject: [
-            LoggerService,
-            JwtTokenService,
-            BcryptService,
-            ExceptionsService,
-            DatabaseUserRepository,
-          ],
-          provide: AuthUsecasesProxyModule.LOGIN_USECASES_PROXY,
-          useFactory: (
-            logger: LoggerService,
-            jwtService: JwtTokenService,
-            bcryptService: BcryptService,
-            exceptionService: ExceptionsService,
-            userRepository: DatabaseUserRepository,
-          ) =>
-            new UseCaseProxy(
-              new LoginUseCase(
-                logger,
-                jwtService,
-                bcryptService,
-                exceptionService,
-                userRepository,
-              ),
-            ),
-        },
-      ],
-      exports: [AuthUsecasesProxyModule.LOGIN_USECASES_PROXY],
-    };
-  }
+	static register(): DynamicModule {
+		return {
+			module: AuthUsecasesProxyModule,
+			providers: [
+				{
+					inject: [
+						LoggerService,
+						JwtTokenService,
+						BcryptService,
+						ExceptionsService,
+						DatabaseUserRepository,
+					],
+					provide: AuthUsecasesProxyModule.LOGIN_USECASES_PROXY,
+					useFactory: (
+						logger: LoggerService,
+						jwtService: JwtTokenService,
+						bcryptService: BcryptService,
+						exceptionService: ExceptionsService,
+						userRepository: DatabaseUserRepository,
+					) =>
+						new UseCaseProxy(
+							new LoginUseCase(
+								logger,
+								jwtService,
+								bcryptService,
+								exceptionService,
+								userRepository,
+							),
+						),
+				},
+			],
+			exports: [AuthUsecasesProxyModule.LOGIN_USECASES_PROXY],
+		};
+	}
 }

@@ -8,37 +8,41 @@ import { ILogger } from '../../logger/logger.interface';
 import { IUserRepository } from '../../repositories/user.repository';
 
 export class UpdateUserFileUseCase {
-  constructor(
-    private readonly logger: ILogger,
-    private readonly repository: IUserRepository,
-    private readonly fileRepository: IFileRepository,    
-    private readonly uploadService: IUploadService,
-    private readonly environmentConfig: EnvironmentConfigService,
-  ) { }
+	constructor(
+		private readonly logger: ILogger,
+		private readonly repository: IUserRepository,
+		private readonly fileRepository: IFileRepository,
+		private readonly uploadService: IUploadService,
+		private readonly environmentConfig: EnvironmentConfigService,
+	) {}
 
-  public async execute(id: string, file?: CreateFileDTO): Promise<User> {
-    let fileUploaded: CreateFileDTO = file
+	public async execute(id: string, file?: CreateFileDTO): Promise<User> {
+		let fileUploaded: CreateFileDTO = file;
 
-    const user = await this.repository.findOne(id);
+		const user = await this.repository.findOne(id);
 
-    const userFile = await this.fileRepository.findOne(id, OwnerType.USER);
-    
-    if (this.environmentConfig.getCloudUpload()) {
-        await this.uploadService.deleteFile([userFile.key]);
-        fileUploaded = await this.uploadService.uploadFile(file);
-    }
+		const userFile = await this.fileRepository.findOne(id, OwnerType.USER);
 
-    await this.fileRepository.delete(id, OwnerType.USER);
+		if (this.environmentConfig.getCloudUpload()) {
+			await this.uploadService.deleteFile([userFile.key]);
+			fileUploaded = await this.uploadService.uploadFile(file);
+		}
 
-    user.file = await this.fileRepository.update(fileUploaded, id, OwnerType.USER);
+		await this.fileRepository.delete(id, OwnerType.USER);
 
-    const updatedUser = await this.repository.update(id, user);
+		user.file = await this.fileRepository.update(
+			fileUploaded,
+			id,
+			OwnerType.USER,
+		);
 
-    this.logger.log(
-      'UpdateUserFileUseCases execute()',
-      `File ${fileUploaded.originalname} have been updated`,
-    );
+		const updatedUser = await this.repository.update(id, user);
 
-    return updatedUser;
-  }
+		this.logger.log(
+			'UpdateUserFileUseCases execute()',
+			`File ${fileUploaded.originalname} have been updated`,
+		);
+
+		return updatedUser;
+	}
 }

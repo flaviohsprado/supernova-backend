@@ -7,33 +7,33 @@ import { ILogger } from '../../logger/logger.interface';
 import { IUserRepository } from '../../repositories/user.repository';
 
 export class UpdateUserUseCase {
-  constructor(
-    private readonly logger: ILogger,
-    private readonly repository: IUserRepository,
-    private readonly bcryptService: IBcryptService,
-    private readonly exceptionService: IExceptionService,
-  ) { }
+	constructor(
+		private readonly logger: ILogger,
+		private readonly repository: IUserRepository,
+		private readonly bcryptService: IBcryptService,
+		private readonly exceptionService: IExceptionService,
+	) {}
 
-  public async execute(id: string, user: UpdateUserDTO): Promise<User> {
-    if (await this.repository.alreadyExists('email', user.email, id))
-      this.exceptionService.throwForbiddenException({
-        message: 'Email already exists in app!',
-        statusCode: HttpStatus.FORBIDDEN
-      })
+	public async execute(id: string, user: UpdateUserDTO): Promise<User> {
+		if (await this.repository.alreadyExists('email', user.email, id))
+			this.exceptionService.throwForbiddenException({
+				message: 'Email already exists in app!',
+				statusCode: HttpStatus.FORBIDDEN,
+			});
 
-    if (user.password) {
-      user.password = await this.bcryptService.createHash(user.password);
-    } else {
-      delete user.password;
-    }
+		if (user.password) {
+			user.password = await this.bcryptService.createHash(user.password);
+		} else {
+			delete user.password;
+		}
 
-    const updatedUser = await this.repository.update(id, user);
+		const updatedUser = await this.repository.update(id, user);
 
-    this.logger.log(
-      'UpdateUserUseCases execute()',
-      `User ${id} have been updated`,
-    );
+		this.logger.log(
+			'UpdateUserUseCases execute()',
+			`User ${id} have been updated`,
+		);
 
-    return updatedUser;
-  }
+		return updatedUser;
+	}
 }
