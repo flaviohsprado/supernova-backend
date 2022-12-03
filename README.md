@@ -24,38 +24,36 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Supernova is a personal study project aimed at experimenting with various features such as queues, streams, web socket, push notification, among others. Made entirely in Typescript with the [NestJS](https://github.com/nestjs/nest) framework and based entirely on the Clean Code architecture, using the SOLID principles to the fullest and aiming to decouple the framework as much as possible.
+It is a project with the purpose of being able to listen to music completely for free, being able to upload files so that other people can also listen to it.
 
 ## Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ yarn start:dev
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ yarn test
 
 # e2e tests
-$ npm run test:e2e
+$ yarn test:e2e
 
 # test coverage
-$ npm run test:cov
+$ yarn test:cov
 ```
 
 ## Support
@@ -64,9 +62,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Flávio Prado](https://www.linkedin.com/in/flaviohsprado/)
 
 ## License
 
