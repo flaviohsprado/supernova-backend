@@ -1,91 +1,95 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AmbientConfig } from '../../../domain/config/ambient.interface';
 import { DatabaseConfig } from '../../../domain/config/database.interface';
 import { JWTConfig } from '../../../domain/config/jwt.interface';
-import { AmbientConfig } from '../../../domain/config/ambient.interface';
 import { RedisConfig } from '../../../domain/config/redis.interface';
 import { S3Config } from '../../../domain/config/s3.interface';
 
 @Injectable()
 export class EnvironmentConfigService
-  implements DatabaseConfig, JWTConfig, S3Config, AmbientConfig, RedisConfig
+	implements DatabaseConfig, JWTConfig, S3Config, AmbientConfig, RedisConfig
 {
-  constructor(private configService: ConfigService) {}
+	constructor(private configService: ConfigService) {}
 
-  //REDIS
-  public getRedisHost(): string {
-    return this.configService.get<string>('REDIS_HOST');
-  }
+	//REDIS
+	public getRedisHost(): string {
+		return this.configService.get<string>('REDIS_HOST');
+	}
 
-  public getRedisPort(): number {
-    return this.configService.get<number>('REDIS_PORT');
-  }
+	public getRedisPort(): number {
+		return this.configService.get<number>('REDIS_PORT');
+	}
 
-  //AMBIENT
-  public getEnvironment(): string {
-    return this.configService.get<string>('ENVIRONMENT');
-  }
+	//AMBIENT
+	public getEnvironment(): string {
+		return this.configService.get<string>('ENVIRONMENT');
+	}
 
-  //S3
-  public getBucketName(): string {
-    return this.configService.get<string>('AWS_S3_BUCKET');
-  }
+	public getCloudUpload(): boolean {
+		return this.configService.get<boolean>('CLOUD_UPLOAD');
+	}
 
-  public getBucketRegion(): string {
-    return this.configService.get<string>('DEFAULT_REGION');
-  }
+	//S3
+	public getBucketName(): string {
+		return this.configService.get<string>('AWS_S3_BUCKET');
+	}
 
-  public getBucketDefaultACL(): string {
-    return this.configService.get<string>('DEFAULT_FILES_ACL');
-  }
+	public getBucketRegion(): string {
+		return this.configService.get<string>('DEFAULT_REGION');
+	}
 
-  public getBucketAccessKeyId(): string {
-    return this.configService.get<string>('AWS_ACCESS_KEY_ID');
-  }
+	public getBucketDefaultACL(): string {
+		return this.configService.get<string>('DEFAULT_FILES_ACL');
+	}
 
-  public getBucketSecretAccessKey(): string {
-    return this.configService.get<string>('AWS_SECRET_ACCESS');
-  }
+	public getBucketAccessKeyId(): string {
+		return this.configService.get<string>('AWS_ACCESS_KEY_ID');
+	}
 
-  //JWT
-  public getJwtSecret(): string {
-    return this.configService.get<string>('JWT_SECRET');
-  }
+	public getBucketSecretAccessKey(): string {
+		return this.configService.get<string>('AWS_SECRET_ACCESS');
+	}
 
-  public getJwtExpirationTime(): string {
-    return this.configService.get<string>('JWT_EXPIRATION_TIME');
-  }
+	//JWT
+	public getJwtSecret(): string {
+		return this.configService.get<string>('JWT_SECRET');
+	}
 
-  //DATABASE
-  public getDatabaseHost(): string {
-    return this.configService.get<string>('DATABASE_HOST');
-  }
+	public getJwtExpirationTime(): string {
+		return this.configService.get<string>('JWT_EXPIRATION_TIME');
+	}
 
-  public getDatabasePort(): number {
-    return this.configService.get<number>('DATABASE_PORT');
-  }
+	//DATABASE
+	public getDatabaseHost(): string {
+		return this.configService.get<string>('DATABASE_HOST');
+	}
 
-  public getDatabaseUser(): string {
-    return this.configService.get<string>('DATABASE_USER');
-  }
+	public getDatabasePort(): number {
+		return this.configService.get<number>('DATABASE_PORT');
+	}
 
-  public getDatabasePassword(): string {
-    return this.configService.get<string>('DATABASE_PASSWORD');
-  }
+	public getDatabaseUser(): string {
+		return this.configService.get<string>('DATABASE_USER');
+	}
 
-  public getDatabaseName(): string {
-    return this.configService.get<string>('DATABASE_NAME');
-  }
+	public getDatabasePassword(): string {
+		return this.configService.get<string>('DATABASE_PASSWORD');
+	}
 
-  public getDatabaseSchema(): string {
-    return this.configService.get<string>('DATABASE_SCHEMA');
-  }
+	public getDatabaseName(): string {
+		return this.configService.get<string>('DATABASE_NAME');
+	}
 
-  public getDatabaseSync(): boolean {
-    return this.configService.get<boolean>('DATABASE_SYNCHRONIZE');
-  }
+	public getDatabaseSchema(): string {
+		return this.configService.get<string>('DATABASE_SCHEMA');
+	}
 
-  public getDatabaseType(): string {
-    return this.configService.get<string>('DATABASE_TYPE');
-  }
+	public getDatabaseSync(): boolean {
+		return this.configService.get<boolean>('DATABASE_SYNCHRONIZE');
+	}
+
+	public getDatabaseType(): string {
+		return this.configService.get<string>('DATABASE_TYPE');
+	}
 }

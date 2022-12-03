@@ -1,65 +1,68 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository';
+import { CreateUserDTO } from '../resolvers/user/user.dto';
 
 @Injectable()
 export class DatabaseUserRepository implements IUserRepository {
-  constructor(
-    @InjectRepository(User)
-    private readonly userEntityRepository: Repository<User>,
-  ) { }
+	constructor(
+		@InjectRepository(User)
+		private readonly userEntityRepository: Repository<User>,
+	) {}
 
-  public async findByKey(key: string, value: string): Promise<User> {
-    return await this.userEntityRepository.findOne({
-      where: { [key]: value },
-    });
-  }
+	public async findByKey(key: string, value: string): Promise<User> {
+		return await this.userEntityRepository.findOne({
+			where: { [key]: value },
+			relations: ['file'],
+		});
+	}
 
-  public async findAll(): Promise<User[]> {
-    return this.userEntityRepository.find();
-  }
+	public async findAll(): Promise<User[]> {
+		return this.userEntityRepository.find({
+			relations: ['file'],
+		});
+	}
 
-  public async findOne(id: string): Promise<User> {
-    const user = await this.userEntityRepository.findOne({
-      where: { id },
-    });
+	public async findOne(id: string): Promise<User> {
+		return await this.userEntityRepository.findOne({
+			where: { id },
+			relations: ['file'],
+		});
+	}
 
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+	public async create(user: CreateUserDTO): Promise<User> {
+		const newUser = this.userEntityRepository.create(user);
+		return this.userEntityRepository.save(newUser);
+	}
 
-    return user;
-  }
+	public async update(id: string, user: User): Promise<User> {
+		return this.userEntityRepository.save({ ...user, id });
+	}
 
-  public async create(user: User): Promise<User> {
-    const newUser = this.userEntityRepository.create(user);
-    return this.userEntityRepository.save(newUser);
-  }
+	public async delete(id: string): Promise<any> {
+		const user = await this.userEntityRepository.findOne({ where: { id } });
 
-  public async update(id: string, user: User): Promise<User> {
-    return this.userEntityRepository.save({ ...user, id });
-  }
+		if (user) {
+			this.userEntityRepository.delete(id);
+			return user;
+		}
+	}
 
-  public async delete(id: string): Promise<any> {
-    const user = await this.userEntityRepository.findOneById(id);
+	public async alreadyExists(
+		key: string,
+		value: string,
+		id?: string,
+	): Promise<boolean> {
+		if (!value) return false;
 
-    if (user) {
-      this.userEntityRepository.delete(id);
-      return user;
-    }
-  }
+		const alreadyExists: User = await this.userEntityRepository.findOne({
+			where: { [key]: value },
+		});
 
-  public async alreadyExists(
-    key: string,
-    value: string,
-    id?: string,
-  ): Promise<boolean> {
-    const alreadyExists: User = await this.userEntityRepository.findOne({
-      where: { [key]: value },
-    });
+		if (alreadyExists && alreadyExists.id !== id) return true;
 
-    if (alreadyExists && alreadyExists.id !== id) return true;
-
-    return false;
-  }
+		return false;
+	}
 }

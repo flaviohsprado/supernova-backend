@@ -4,28 +4,28 @@ import { IExceptionService } from '../../interfaces/exceptions.interface';
 import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindUserByKeyUseCase {
-  constructor(
-    private readonly repository: IUserRepository,
-    private readonly exceptionService: IExceptionService,
-    private readonly cacheManager: ICacheManager,
-  ) {}
+	constructor(
+		private readonly repository: IUserRepository,
+		private readonly exceptionService: IExceptionService,
+		private readonly cacheManager: ICacheManager,
+	) {}
 
-  public async execute(key: string, value: string): Promise<User> {
-    const cachedUser = await this.cacheManager.getCachedObject<User>(
-      'userById',
-    );
+	public async execute(key: string, value: string): Promise<User> {
+		const cachedUser = await this.cacheManager.getCachedObject<User>(
+			'userById',
+		);
 
-    if (cachedUser) return cachedUser;
+		if (cachedUser) return cachedUser;
 
-    const user: User = await this.repository.findByKey(key, value);
+		const user: User = await this.repository.findByKey(key, value);
 
-    if (!user)
-      this.exceptionService.throwNotFoundException({
-        message: 'User not found',
-      });
+		if (!user)
+			this.exceptionService.throwNotFoundException({
+				message: 'User not found',
+			});
 
-    await this.cacheManager.setObjectInCache('userById', user);
+		await this.cacheManager.setObjectInCache('userById', user);
 
-    return user;
-  }
+		return user;
+	}
 }
