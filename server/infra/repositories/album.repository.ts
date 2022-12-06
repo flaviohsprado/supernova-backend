@@ -13,14 +13,14 @@ export class DatabaseAlbumRepository implements IAlbumRepository {
 
 	public async findAll(): Promise<Album[]> {
 		return this.albumEntityRepository.find({
-			relations: ['artist', 'musics', 'file'],
+			relations: ['artist', 'musics', 'musics.file', 'file'],
 		});
 	}
 
 	public async findOne(id: string): Promise<Album> {
 		return await this.albumEntityRepository.findOne({
 			where: { id },
-			relations: ['artist', 'musics', 'file'],
+			relations: ['artist', 'musics', 'musics.file', 'file'],
 		});
 	}
 
