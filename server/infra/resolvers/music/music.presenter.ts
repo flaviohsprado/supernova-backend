@@ -22,7 +22,7 @@ export class MusicPresenter {
 	@Field()
 	public album: Album;
 
-	@Field()
+	@Field({ nullable: true })
 	public file?: File;
 
 	constructor(props: MusicPresenter) {

@@ -24,11 +24,11 @@ export class UpdateMusicFileUseCase {
 		const musicFile = await this.fileRepository.findOne(id, OwnerType.MUSIC);
 
 		if (this.environmentConfig.getCloudUpload()) {
-			await this.uploadService.deleteFile([musicFile.key]);
+			if (musicFile) await this.uploadService.deleteFile([musicFile.key]);
 			fileUploaded = await this.uploadService.uploadFile(file);
 		}
 
-		await this.fileRepository.delete(id, OwnerType.MUSIC);
+		if (musicFile) await this.fileRepository.delete(id, OwnerType.MUSIC);
 
 		music.file = await this.fileRepository.update(
 			fileUploaded,

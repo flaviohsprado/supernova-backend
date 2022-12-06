@@ -9,7 +9,7 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
 } from 'typeorm';
 import { Artist } from './artist.entity';
 import { File } from './file.entity';

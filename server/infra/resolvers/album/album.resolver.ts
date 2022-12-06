@@ -9,7 +9,7 @@ import {
 	FindAllAlbumUseCase,
 	FindOneAlbumUseCase,
 	UpdateAlbumFileUseCase,
-	UpdateAlbumUseCase
+	UpdateAlbumUseCase,
 } from '../../../domain/use-cases/album';
 import { AlbumUsecasesProxyModule } from '../../usecases-proxy/album/album-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';

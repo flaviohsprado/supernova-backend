@@ -9,7 +9,7 @@ import {
 	FindAllAlbumUseCase,
 	FindOneAlbumUseCase,
 	UpdateAlbumFileUseCase,
-	UpdateAlbumUseCase
+	UpdateAlbumUseCase,
 } from '../../../domain/use-cases/album';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
