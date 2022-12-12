@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Playlist } from '../../domain/entities/playlist.entity';
 import {
 	CreatePlaylistDTO,
-	UpdatePlaylistDTO
+	UpdatePlaylistDTO,
 } from '../resolvers/playlist/playlist.dto';
 
 @Injectable()

@@ -9,7 +9,7 @@ import {
 	DeletePlaylistUseCase,
 	FindAllPlaylistUseCase,
 	FindOnePlaylistUseCase,
-	UpdatePlaylistUseCase
+	UpdatePlaylistUseCase,
 } from '../../../domain/use-cases/playlist';
 import { PlaylistUsecasesProxyModule } from '../../usecases-proxy/playlist/playlist-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';

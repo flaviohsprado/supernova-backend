@@ -4,8 +4,9 @@ import { IsRequiredStringColumn } from 'server/main/decorators/columns/isRequire
 import {
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
-	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Music } from './music.entity';
@@ -28,11 +29,12 @@ export class Playlist {
 	public isPublic: boolean;
 
 	@Field(() => [Music], { nullable: true })
-	@OneToMany(() => Music, (Music) => Music.album, {
+	@ManyToMany(() => Music, (Music) => Music.album, {
 		cascade: true,
 		onDelete: 'SET NULL',
 		nullable: true,
 	})
+	@JoinTable()
 	public musics?: Music[];
 
 	@ManyToOne(() => User, (User) => User.id, {
