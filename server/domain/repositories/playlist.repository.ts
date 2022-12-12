@@ -1,6 +1,6 @@
 import {
 	CreatePlaylistDTO,
-	UpdatePlaylistDTO
+	UpdatePlaylistDTO,
 } from 'server/infra/resolvers/playlist/playlist.dto';
 import { Playlist } from '../entities/playlist.entity';
 

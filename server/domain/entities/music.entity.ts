@@ -1,6 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { IsOptionalNumberColumn } from 'server/main/decorators/columns/isOptionalnumberColumn.decorator';
-import { IsOptionalStringColumn } from 'server/main/decorators/columns/isOptionalStringColumn.decorator';
 import {
 	CreateDateColumn,
 	Entity,
@@ -13,7 +12,6 @@ import {
 import { IsRequiredStringColumn } from '../../main/decorators/columns/isRequiredStringColumn.decorator';
 import { Album } from './album.entity';
 import { File } from './file.entity';
-import { Playlist } from './playlist.entity';
 
 @ObjectType()
 @Entity()
@@ -24,9 +22,6 @@ export class Music {
 
 	@IsRequiredStringColumn()
 	public albumId: string;
-
-	@IsOptionalStringColumn()
-	public playlistId?: string;
 
 	@IsRequiredStringColumn()
 	public title: string;
@@ -46,12 +41,6 @@ export class Music {
 	@ManyToOne(() => Album, (Album) => Album.id, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'albumId' })
 	public album: Album;
-
-	@ManyToOne(() => Playlist, (Playlist) => Playlist.id, {
-		onDelete: 'SET NULL',
-	})
-	@JoinColumn({ name: 'playlistId' })
-	public playlist: Playlist;
 
 	@Field(() => File, { nullable: true })
 	@OneToOne(() => File, (file) => file.ownerId, {
