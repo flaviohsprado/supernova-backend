@@ -29,16 +29,12 @@ export class Playlist {
 	public isPublic: boolean;
 
 	@Field(() => [Music], { nullable: true })
-	@ManyToMany(() => Music, (Music) => Music.album, {
-		cascade: true,
-		onDelete: 'SET NULL',
-		nullable: true,
-	})
+	@ManyToMany(() => Music, { cascade: ['update'], nullable: true })
 	@JoinTable()
 	public musics?: Music[];
 
 	@ManyToOne(() => User, (User) => User.id, {
-		onDelete: 'SET NULL',
+		onDelete: 'CASCADE',
 	})
 	@JoinColumn({ name: 'userId' })
 	public user: User;

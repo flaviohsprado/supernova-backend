@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IPlaylistRepository } from 'server/domain/repositories/playlist.repository';
 import { Repository } from 'typeorm';
+import { Music } from '../../domain/entities/music.entity';
 import { Playlist } from '../../domain/entities/playlist.entity';
+import { IPlaylistRepository } from '../../domain/repositories/playlist.repository';
 import {
 	CreatePlaylistDTO,
 	UpdatePlaylistDTO,
@@ -31,7 +32,38 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 
 	public async create(playlist: CreatePlaylistDTO): Promise<Playlist> {
 		const newPlaylist = this.repository.create(playlist);
+
+		newPlaylist.musics = [];
+
 		return this.repository.save(newPlaylist);
+	}
+
+	public async insertMusic(
+		playlistId: string,
+		music: Music,
+	): Promise<Playlist> {
+		const playlist = await this.repository.findOne({
+			where: { id: playlistId },
+			relations: ['musics'],
+		});
+
+		playlist.musics = [...playlist.musics, music];
+
+		return this.repository.save(playlist);
+	}
+
+	public async removeMusic(
+		playlistId: string,
+		musicId: string,
+	): Promise<Playlist> {
+		const playlist = await this.repository.findOne({
+			where: { id: playlistId },
+			relations: ['musics'],
+		});
+
+		playlist.musics = playlist.musics.filter((music) => music.id !== musicId);
+
+		return this.repository.save(playlist);
 	}
 
 	public async update(

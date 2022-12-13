@@ -6,9 +6,11 @@ import { CurrentUser } from 'server/main/decorators/currentUser.decorator';
 import { Playlist } from '../../../domain/entities/playlist.entity';
 import {
 	CreatePlaylistUseCase,
+	DeleteMusicPlaylistUseCase,
 	DeletePlaylistUseCase,
 	FindAllPlaylistUseCase,
 	FindOnePlaylistUseCase,
+	InsertMusicPlaylistUseCase,
 	UpdatePlaylistUseCase,
 } from '../../../domain/use-cases/playlist';
 import { PlaylistUsecasesProxyModule } from '../../usecases-proxy/playlist/playlist-usecases-proxy.module';
@@ -25,6 +27,10 @@ export class PlaylistResolver {
 		private readonly findOnePlaylistUseCase: UseCaseProxy<FindOnePlaylistUseCase>,
 		@Inject(PlaylistUsecasesProxyModule.POST_PLAYLIST_USECASES_PROXY)
 		private readonly createPlaylistUseCase: UseCaseProxy<CreatePlaylistUseCase>,
+		@Inject(PlaylistUsecasesProxyModule.INSERT_MUSIC_PLAYLIST_USECASES_PROXY)
+		private readonly insertMusicPlaylistUseCase: UseCaseProxy<InsertMusicPlaylistUseCase>,
+		@Inject(PlaylistUsecasesProxyModule.DELETE_MUSIC_PLAYLIST_USECASES_PROXY)
+		private readonly deleteMusicPlaylistUseCase: UseCaseProxy<DeleteMusicPlaylistUseCase>,
 		@Inject(PlaylistUsecasesProxyModule.PUT_PLAYLIST_USECASES_PROXY)
 		private readonly updatePlaylistUseCase: UseCaseProxy<UpdatePlaylistUseCase>,
 		@Inject(PlaylistUsecasesProxyModule.DELETE_PLAYLIST_USECASES_PROXY)
@@ -62,6 +68,30 @@ export class PlaylistResolver {
 		const createdPlaylist = await this.createPlaylistUseCase
 			.getInstance()
 			.execute(newPlaylist);
+
+		return new PlaylistPresenter(createdPlaylist);
+	}
+
+	@Mutation((returns) => PlaylistPresenter)
+	public async InsertMusicIntoPlaylist(
+		@Args('playlistId') playlistId: string,
+		@Args('musicId') musicId: string,
+	): Promise<PlaylistPresenter> {
+		const createdPlaylist = await this.insertMusicPlaylistUseCase
+			.getInstance()
+			.execute(playlistId, musicId);
+
+		return new PlaylistPresenter(createdPlaylist);
+	}
+
+	@Mutation((returns) => PlaylistPresenter)
+	public async DeleteMusicFromPlaylist(
+		@Args('playlistId') playlistId: string,
+		@Args('musicId') musicId: string,
+	): Promise<PlaylistPresenter> {
+		const createdPlaylist = await this.deleteMusicPlaylistUseCase
+			.getInstance()
+			.execute(playlistId, musicId);
 
 		return new PlaylistPresenter(createdPlaylist);
 	}

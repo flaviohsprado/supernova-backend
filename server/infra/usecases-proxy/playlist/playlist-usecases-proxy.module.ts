@@ -1,6 +1,9 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { InsertMusicPlaylistUseCase } from 'server/domain/use-cases/playlist/insert-music-playlist.usecase';
+import { DatabaseMusicRepository } from 'server/infra/repositories/music.repository';
 import {
 	CreatePlaylistUseCase,
+	DeleteMusicPlaylistUseCase,
 	DeletePlaylistUseCase,
 	FindAllPlaylistUseCase,
 	FindOnePlaylistUseCase,
@@ -32,6 +35,10 @@ export class PlaylistUsecasesProxyModule {
 	static POST_PLAYLIST_USECASES_PROXY = 'postPlaylistUsecasesProxy';
 	static DELETE_PLAYLIST_USECASES_PROXY = 'deletePlaylistUsecasesProxy';
 	static PUT_PLAYLIST_USECASES_PROXY = 'putPlaylistUsecasesProxy';
+	static INSERT_MUSIC_PLAYLIST_USECASES_PROXY =
+		'insertMusicPlaylistUsecasesProxy';
+	static DELETE_MUSIC_PLAYLIST_USECASES_PROXY =
+		'deleteMusicPlaylistUsecasesProxy';
 
 	static register(): DynamicModule {
 		return {
@@ -61,6 +68,48 @@ export class PlaylistUsecasesProxyModule {
 								repository,
 								exceptionService,
 								cacheService,
+							),
+						),
+				},
+				{
+					inject: [
+						LoggerService,
+						DatabasePlaylistRepository,
+						DatabaseMusicRepository,
+					],
+					provide:
+						PlaylistUsecasesProxyModule.INSERT_MUSIC_PLAYLIST_USECASES_PROXY,
+					useFactory: (
+						logger: LoggerService,
+						repository: DatabasePlaylistRepository,
+						musicRepository: DatabaseMusicRepository,
+					) =>
+						new UseCaseProxy(
+							new InsertMusicPlaylistUseCase(
+								logger,
+								repository,
+								musicRepository,
+							),
+						),
+				},
+				{
+					inject: [
+						LoggerService,
+						DatabasePlaylistRepository,
+						DatabaseMusicRepository,
+					],
+					provide:
+						PlaylistUsecasesProxyModule.DELETE_MUSIC_PLAYLIST_USECASES_PROXY,
+					useFactory: (
+						logger: LoggerService,
+						repository: DatabasePlaylistRepository,
+						musicRepository: DatabaseMusicRepository,
+					) =>
+						new UseCaseProxy(
+							new DeleteMusicPlaylistUseCase(
+								logger,
+								repository,
+								musicRepository,
 							),
 						),
 				},
@@ -101,6 +150,8 @@ export class PlaylistUsecasesProxyModule {
 				PlaylistUsecasesProxyModule.GET_PLAYLISTS_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.GET_PLAYLIST_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.POST_PLAYLIST_USECASES_PROXY,
+				PlaylistUsecasesProxyModule.INSERT_MUSIC_PLAYLIST_USECASES_PROXY,
+				PlaylistUsecasesProxyModule.DELETE_MUSIC_PLAYLIST_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.PUT_PLAYLIST_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.DELETE_PLAYLIST_USECASES_PROXY,
 			],
