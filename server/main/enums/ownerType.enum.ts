@@ -3,4 +3,5 @@ export enum OwnerType {
 	ARTIST = 'ARTIST',
 	ALBUM = 'ALBUM',
 	MUSIC = 'MUSIC',
+	PLAYLIST = 'PLAYLIST',
 }

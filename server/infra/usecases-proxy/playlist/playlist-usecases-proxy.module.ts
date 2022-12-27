@@ -1,13 +1,18 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { InsertMusicPlaylistUseCase } from 'server/domain/use-cases/playlist/insert-music-playlist.usecase';
+import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
+import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
 import { DatabaseMusicRepository } from 'server/infra/repositories/music.repository';
+import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
+import { S3Service } from 'server/infra/services/s3/s3.service';
 import {
 	CreatePlaylistUseCase,
 	DeleteMusicPlaylistUseCase,
 	DeletePlaylistUseCase,
 	FindAllPlaylistUseCase,
 	FindOnePlaylistUseCase,
-	UpdatePlaylistUseCase,
+	InsertMusicPlaylistUseCase,
+	UpdatePlaylistFileUseCase,
+	UpdatePlaylistUseCase
 } from '../../../domain/use-cases/playlist';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
@@ -27,6 +32,7 @@ import { UseCaseProxy } from '../usecase-proxy';
 		RepositoriesModule,
 		ExceptionsModule,
 		CacheConfigModule,
+		S3ConfigModule,
 	],
 })
 export class PlaylistUsecasesProxyModule {
@@ -39,11 +45,13 @@ export class PlaylistUsecasesProxyModule {
 		'insertMusicPlaylistUsecasesProxy';
 	static DELETE_MUSIC_PLAYLIST_USECASES_PROXY =
 		'deleteMusicPlaylistUsecasesProxy';
+	static PUT_PLAYLIST_FILE_USECASES_PROXY = 'putFilePlaylistUsecasesProxy';
 
 	static register(): DynamicModule {
 		return {
 			module: PlaylistUsecasesProxyModule,
 			providers: [
+				//GET_PLAYLISTS_USECASES_PROXY
 				{
 					inject: [DatabasePlaylistRepository, CacheService],
 					provide: PlaylistUsecasesProxyModule.GET_PLAYLISTS_USECASES_PROXY,
@@ -55,6 +63,7 @@ export class PlaylistUsecasesProxyModule {
 							new FindAllPlaylistUseCase(repository, cacheService),
 						),
 				},
+				//GET_PLAYLIST_USECASES_PROXY
 				{
 					inject: [DatabasePlaylistRepository, ExceptionsService, CacheService],
 					provide: PlaylistUsecasesProxyModule.GET_PLAYLIST_USECASES_PROXY,
@@ -71,6 +80,7 @@ export class PlaylistUsecasesProxyModule {
 							),
 						),
 				},
+				//INSERT_MUSIC_PLAYLIST_USECASES_PROXY
 				{
 					inject: [
 						LoggerService,
@@ -92,6 +102,7 @@ export class PlaylistUsecasesProxyModule {
 							),
 						),
 				},
+				//DELETE_MUSIC_PLAYLIST_USECASES_PROXY
 				{
 					inject: [
 						LoggerService,
@@ -113,14 +124,34 @@ export class PlaylistUsecasesProxyModule {
 							),
 						),
 				},
+				//POST_PLAYLIST_USECASES_PROXY
 				{
-					inject: [LoggerService, DatabasePlaylistRepository],
+					inject: [
+						LoggerService,
+						DatabasePlaylistRepository,
+						DatabaseFileRepository,
+						S3Service,
+						EnvironmentConfigService,
+					],
 					provide: PlaylistUsecasesProxyModule.POST_PLAYLIST_USECASES_PROXY,
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabasePlaylistRepository,
-					) => new UseCaseProxy(new CreatePlaylistUseCase(logger, repository)),
+						fileRepository: DatabaseFileRepository,
+						s3Service: S3Service,
+						config: EnvironmentConfigService,
+					) =>
+						new UseCaseProxy(
+							new CreatePlaylistUseCase(
+								logger,
+								repository,
+								fileRepository,
+								s3Service,
+								config,
+							),
+						),
 				},
+				//PUT_PLAYLIST_USECASES_PROXY
 				{
 					inject: [LoggerService, DatabasePlaylistRepository],
 					provide: PlaylistUsecasesProxyModule.PUT_PLAYLIST_USECASES_PROXY,
@@ -133,16 +164,56 @@ export class PlaylistUsecasesProxyModule {
 					inject: [
 						LoggerService,
 						DatabasePlaylistRepository,
+						DatabaseFileRepository,
+						S3Service,
+						EnvironmentConfigService,
+					],
+					provide: PlaylistUsecasesProxyModule.PUT_PLAYLIST_FILE_USECASES_PROXY,
+					useFactory: (
+						logger: LoggerService,
+						repository: DatabasePlaylistRepository,
+						fileRepository: DatabaseFileRepository,
+						s3Service: S3Service,
+						config: EnvironmentConfigService,
+					) =>
+						new UseCaseProxy(
+							new UpdatePlaylistFileUseCase(
+								logger,
+								repository,
+								fileRepository,
+								s3Service,
+								config,
+							),
+						),
+				},
+				//DELETE_PLAYLIST_USECASES_PROXY
+				{
+					inject: [
+						LoggerService,
+						DatabasePlaylistRepository,
 						ExceptionsService,
+						S3Service,
+						EnvironmentConfigService,
+						DatabaseFileRepository,
 					],
 					provide: PlaylistUsecasesProxyModule.DELETE_PLAYLIST_USECASES_PROXY,
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabasePlaylistRepository,
 						exceptionService: ExceptionsService,
+						s3Service: S3Service,
+						config: EnvironmentConfigService,
+						fileRepository: DatabaseFileRepository,
 					) =>
 						new UseCaseProxy(
-							new DeletePlaylistUseCase(logger, repository, exceptionService),
+							new DeletePlaylistUseCase(
+								logger,
+								repository,
+								exceptionService,
+								fileRepository,
+								s3Service,
+								config,
+							),
 						),
 				},
 			],
@@ -154,6 +225,7 @@ export class PlaylistUsecasesProxyModule {
 				PlaylistUsecasesProxyModule.DELETE_MUSIC_PLAYLIST_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.PUT_PLAYLIST_USECASES_PROXY,
 				PlaylistUsecasesProxyModule.DELETE_PLAYLIST_USECASES_PROXY,
+				PlaylistUsecasesProxyModule.PUT_PLAYLIST_FILE_USECASES_PROXY,
 			],
 		};
 	}

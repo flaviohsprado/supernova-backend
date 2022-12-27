@@ -3,9 +3,14 @@ import { IsOptionalBoolean } from 'server/main/decorators/validators/isOptionalB
 import { IsOptionalString } from 'server/main/decorators/validators/isOptionalString.decorator';
 import { IsRequiredBoolean } from 'server/main/decorators/validators/isRequiredBoolean.decorator';
 import { IsRequiredString } from 'server/main/decorators/validators/isRequiredString.decorator';
+import { uuid } from 'uuidv4';
+import { CreateFileDTO } from '../file/file.dto';
 
 @InputType()
 export class CreatePlaylistDTO {
+	@IsOptionalString()
+	public id?: string;
+
 	@IsRequiredString()
 	public userId: string;
 
@@ -15,8 +20,12 @@ export class CreatePlaylistDTO {
 	@IsRequiredBoolean()
 	public isPublic: boolean;
 
+	@IsOptionalString()
+	public file?: CreateFileDTO;
+
 	constructor(props: CreatePlaylistDTO) {
 		Object.assign(this, props);
+		this.id = uuid();
 	}
 }
 
