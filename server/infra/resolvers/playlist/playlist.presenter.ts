@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { File } from 'server/domain/entities/file.entity';
 import { Music } from 'server/domain/entities/music.entity';
 import { Playlist } from 'server/domain/entities/playlist.entity';
 import { User } from 'server/domain/entities/user.entity';
@@ -20,17 +21,20 @@ export class PlaylistPresenter {
 	@Field({ nullable: true })
 	public duration?: number;
 
-	@Field(() => User, { nullable: true })
-	public user: User;
-
 	@Field()
 	public createdAt?: Date;
 
 	@Field()
 	public updatedAt?: Date;
 
+	@Field(() => User, { nullable: true })
+	public user: User;
+
 	@Field(() => [Music], { nullable: true })
 	public musics?: Music[];
+
+	@Field({ nullable: true })
+	public file?: File;
 
 	constructor(props: Playlist) {
 		Object.assign(this, props);

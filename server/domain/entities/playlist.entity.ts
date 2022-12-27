@@ -7,8 +7,10 @@ import {
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
-	PrimaryGeneratedColumn,
+	OneToOne,
+	PrimaryGeneratedColumn
 } from 'typeorm';
+import { File } from './file.entity';
 import { Music } from './music.entity';
 import { User } from './user.entity';
 
@@ -28,14 +30,23 @@ export class Playlist {
 	@IsRequiredBooleanColumn()
 	public isPublic: boolean;
 
-	@Field(() => [Music], { nullable: true })
-	@ManyToMany(() => Music, { cascade: ['update'], nullable: true })
-	@JoinTable()
-	public musics?: Music[];
-
 	@ManyToOne(() => User, (User) => User.id, {
 		onDelete: 'CASCADE',
 	})
 	@JoinColumn({ name: 'userId' })
 	public user: User;
+
+	@Field(() => [Music], { nullable: true })
+	@ManyToMany(() => Music, { cascade: ['update'], nullable: true })
+	@JoinTable()
+	public musics?: Music[];
+
+	@Field(() => File, { nullable: true })
+	@OneToOne(() => File, (file) => file.ownerId, {
+		cascade: true,
+		onDelete: 'CASCADE',
+		nullable: true,
+	})
+	@JoinColumn()
+	public file?: File;
 }

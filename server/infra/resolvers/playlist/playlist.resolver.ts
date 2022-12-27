@@ -1,7 +1,9 @@
 import { HttpCode, Inject, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { IAuth } from 'server/domain/interfaces/auth.interface';
 import { GraphqlAuthGuard } from 'server/infra/commons/guards/graphql-jwt-auth.guard';
+import { FileUtils } from 'server/infra/commons/utils/file.utils';
 import { CurrentUser } from 'server/main/decorators/currentUser.decorator';
 import { Playlist } from '../../../domain/entities/playlist.entity';
 import {
@@ -11,10 +13,12 @@ import {
 	FindAllPlaylistUseCase,
 	FindOnePlaylistUseCase,
 	InsertMusicPlaylistUseCase,
-	UpdatePlaylistUseCase,
+	UpdatePlaylistFileUseCase,
+	UpdatePlaylistUseCase
 } from '../../../domain/use-cases/playlist';
 import { PlaylistUsecasesProxyModule } from '../../usecases-proxy/playlist/playlist-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
+import { CreateFileDTO } from '../file/file.dto';
 import { CreatePlaylistDTO, UpdatePlaylistDTO } from './playlist.dto';
 import { PlaylistPresenter } from './playlist.presenter';
 
@@ -35,6 +39,8 @@ export class PlaylistResolver {
 		private readonly updatePlaylistUseCase: UseCaseProxy<UpdatePlaylistUseCase>,
 		@Inject(PlaylistUsecasesProxyModule.DELETE_PLAYLIST_USECASES_PROXY)
 		private readonly deletePlaylistUseCase: UseCaseProxy<DeletePlaylistUseCase>,
+		@Inject(PlaylistUsecasesProxyModule.PUT_PLAYLIST_FILE_USECASES_PROXY)
+		private readonly updatePlaylistFileUseCase: UseCaseProxy<UpdatePlaylistFileUseCase>,
 	) {}
 
 	@Query((returns) => [PlaylistPresenter])
@@ -106,6 +112,18 @@ export class PlaylistResolver {
 			.execute(id, playlist);
 
 		return new PlaylistPresenter(newPlaylist);
+	}
+
+	@Mutation((returns) => PlaylistPresenter)
+	public async updatePlaylistFile(
+		@Args('id') id: string,
+		@Args('file', { type: () => GraphQLUpload, nullable: true })
+		file: FileUpload,
+	): Promise<PlaylistPresenter> {
+		const newFile: CreateFileDTO = await FileUtils.createFile(file);
+		return await this.updatePlaylistFileUseCase
+			.getInstance()
+			.execute(id, newFile);
 	}
 
 	@HttpCode(204)
