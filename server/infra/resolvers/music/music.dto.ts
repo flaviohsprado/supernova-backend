@@ -1,4 +1,5 @@
 import { InputType } from '@nestjs/graphql';
+import { IsOptionalNumber } from 'server/main/decorators/validators/isOptionalNumber.decorator';
 import { IsOptionalString } from 'server/main/decorators/validators/isOptionalString.decorator';
 import { IsRequiredString } from 'server/main/decorators/validators/isRequiredString.decorator';
 import { uuid } from 'uuidv4';
@@ -15,7 +16,7 @@ export class CreateMusicDTO {
 	@IsRequiredString()
 	public title: string;
 
-	@IsOptionalString()
+	@IsOptionalNumber()
 	public duration: number;
 
 	@IsOptionalString()
@@ -35,7 +36,7 @@ export class UpdateMusicDTO {
 	@IsOptionalString()
 	public title?: string;
 
-	@IsOptionalString()
+	@IsOptionalNumber()
 	public duration?: number;
 
 	@IsOptionalString()
