@@ -36,6 +36,7 @@ export class Playlist {
 	@JoinColumn({ name: 'userId' })
 	public user: User;
 
+	//TODO: Add addedAt column to PlaylistMusic table
 	@Field(() => [Music], { nullable: true })
 	@ManyToMany(() => Music, { cascade: ['update'], nullable: true })
 	@JoinTable()

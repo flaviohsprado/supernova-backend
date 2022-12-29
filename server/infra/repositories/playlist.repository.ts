@@ -19,14 +19,28 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 	public async findAll(userId?: string): Promise<Playlist[]> {
 		return this.repository.find({
 			where: { userId },
-			relations: ['user', 'user.file', 'musics', 'musics.file', 'file'],
+			relations: [
+				'user',
+				'user.file',
+				'musics',
+				'musics.file',
+				'musics.album',
+				'file',
+			],
 		});
 	}
 
 	public async findOne(id: string): Promise<Playlist> {
 		return await this.repository.findOne({
 			where: { id },
-			relations: ['user', 'user.file', 'musics', 'musics.file', 'file'],
+			relations: [
+				'user',
+				'user.file',
+				'musics',
+				'musics.album',
+				'musics.file',
+				'file',
+			],
 		});
 	}
 
