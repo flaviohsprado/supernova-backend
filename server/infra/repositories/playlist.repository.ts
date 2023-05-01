@@ -6,7 +6,7 @@ import { Playlist } from '../../domain/entities/playlist.entity';
 import { IPlaylistRepository } from '../../domain/repositories/playlist.repository';
 import {
 	CreatePlaylistDTO,
-	UpdatePlaylistDTO
+	UpdatePlaylistDTO,
 } from '../resolvers/playlist/playlist.dto';
 
 @Injectable()
@@ -19,14 +19,30 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 	public async findAll(userId?: string): Promise<Playlist[]> {
 		return this.repository.find({
 			where: { userId },
-			relations: ['user', 'user.file', 'musics', 'musics.file', 'file'],
+			relations: [
+				'user',
+				'user.file',
+				'musics',
+				'musics.file',
+				'musics.album',
+				'musics.album.artist',
+				'file',
+			],
 		});
 	}
 
 	public async findOne(id: string): Promise<Playlist> {
 		return await this.repository.findOne({
 			where: { id },
-			relations: ['user', 'user.file', 'musics', 'musics.file', 'file'],
+			relations: [
+				'user',
+				'user.file',
+				'musics',
+				'musics.album',
+				'musics.album.artist',
+				'musics.file',
+				'file',
+			],
 		});
 	}
 

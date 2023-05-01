@@ -37,7 +37,7 @@ export class Music {
 	@UpdateDateColumn()
 	public updatedAt: Date;
 
-	//TODO: dont delete, but set to null
+	@Field(() => Album)
 	@ManyToOne(() => Album, (Album) => Album.id, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'albumId' })
 	public album: Album;

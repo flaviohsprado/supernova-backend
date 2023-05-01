@@ -1,8 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { File } from 'server/domain/entities/file.entity';
-import { Music } from 'server/domain/entities/music.entity';
-import { Playlist } from 'server/domain/entities/playlist.entity';
-import { User } from 'server/domain/entities/user.entity';
+import { FilePresenter } from '../file/file.presenter';
+import { MusicPresenter } from '../music/music.presenter';
+import { UserPresenter } from '../user/user.presenter';
 
 @ObjectType()
 export class PlaylistPresenter {
@@ -27,16 +26,25 @@ export class PlaylistPresenter {
 	@Field()
 	public updatedAt?: Date;
 
-	@Field(() => User, { nullable: true })
-	public user: User;
+	@Field(() => UserPresenter, { nullable: true })
+	public user: UserPresenter;
 
-	@Field(() => [Music], { nullable: true })
-	public musics?: Music[];
+	@Field(() => [MusicPresenter], { nullable: true })
+	public musics?: MusicPresenter[];
 
 	@Field({ nullable: true })
-	public file?: File;
+	public file?: FilePresenter;
 
-	constructor(props: Playlist) {
-		Object.assign(this, props);
+	constructor(props: PlaylistPresenter) {
+		this.id = props.id;
+		this.title = props.title;
+		this.isPublic = props.isPublic;
+		this.numberOfSongs = props.musics ? props.musics?.length : 0;
+		this.duration = props.musics.reduce((acc, curr) => acc + curr.duration, 0);
+		this.createdAt = props.createdAt;
+		this.updatedAt = props.updatedAt;
+		this.user = new UserPresenter(props.user);
+		this.musics = props.musics.map((music) => new MusicPresenter(music));
+		this.file = props.file ? new FilePresenter(props.file) : undefined;
 	}
 }

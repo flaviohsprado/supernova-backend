@@ -8,7 +8,7 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToOne,
-	PrimaryGeneratedColumn
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { File } from './file.entity';
 import { Music } from './music.entity';
@@ -36,6 +36,7 @@ export class Playlist {
 	@JoinColumn({ name: 'userId' })
 	public user: User;
 
+	//TODO: Add addedAt column to PlaylistMusic table
 	@Field(() => [Music], { nullable: true })
 	@ManyToMany(() => Music, { cascade: ['update'], nullable: true })
 	@JoinTable()

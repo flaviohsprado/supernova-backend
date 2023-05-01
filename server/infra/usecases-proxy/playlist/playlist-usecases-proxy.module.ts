@@ -12,7 +12,7 @@ import {
 	FindOnePlaylistUseCase,
 	InsertMusicPlaylistUseCase,
 	UpdatePlaylistFileUseCase,
-	UpdatePlaylistUseCase
+	UpdatePlaylistUseCase,
 } from '../../../domain/use-cases/playlist';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';

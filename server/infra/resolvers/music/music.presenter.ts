@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Album } from 'server/domain/entities/album.entity';
-import { File } from 'server/domain/entities/file.entity';
+import { AlbumPresenter } from '../album/album.presenter';
+import { FilePresenter } from '../file/file.presenter';
 
 @ObjectType()
 export class MusicPresenter {
@@ -19,13 +19,19 @@ export class MusicPresenter {
 	@Field()
 	public updatedAt: Date;
 
-	@Field()
-	public album: Album;
+	@Field(() => AlbumPresenter)
+	public album: AlbumPresenter;
 
 	@Field({ nullable: true })
-	public file?: File;
+	public file?: FilePresenter;
 
 	constructor(props: MusicPresenter) {
-		Object.assign(this, props);
+		this.id = props.id;
+		this.title = props.title;
+		this.duration = props.duration;
+		this.createdAt = props.createdAt;
+		this.updatedAt = props.updatedAt;
+		this.album = new AlbumPresenter(props.album);
+		this.file = new FilePresenter(props.file);
 	}
 }
