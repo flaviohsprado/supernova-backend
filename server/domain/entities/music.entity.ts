@@ -7,7 +7,7 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
 } from 'typeorm';
 import { IsRequiredStringColumn } from '../../main/decorators/columns/isRequiredStringColumn.decorator';
 import { Album } from './album.entity';
@@ -37,6 +37,7 @@ export class Music {
 	@UpdateDateColumn()
 	public updatedAt: Date;
 
+	@Field(() => Album)
 	@ManyToOne(() => Album, (Album) => Album.id, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'albumId' })
 	public album: Album;

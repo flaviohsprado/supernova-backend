@@ -49,6 +49,7 @@ export class MusicUsecasesProxyModule {
 		return {
 			module: MusicUsecasesProxyModule,
 			providers: [
+				//GET
 				{
 					inject: [DatabaseMusicRepository, CacheService],
 					provide: MusicUsecasesProxyModule.GET_MUSICS_USECASES_PROXY,
@@ -58,6 +59,7 @@ export class MusicUsecasesProxyModule {
 					) =>
 						new UseCaseProxy(new FindAllMusicUseCase(repository, cacheService)),
 				},
+				//GET
 				{
 					inject: [DatabaseMusicRepository, ExceptionsService, CacheService],
 					provide: MusicUsecasesProxyModule.GET_MUSIC_USECASES_PROXY,
@@ -74,12 +76,12 @@ export class MusicUsecasesProxyModule {
 							),
 						),
 				},
+				//POST
 				{
 					inject: [
 						LoggerService,
 						DatabaseMusicRepository,
 						DatabaseFileRepository,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 					],
@@ -89,7 +91,7 @@ export class MusicUsecasesProxyModule {
 						repository: DatabaseMusicRepository,
 						fileRepository: DatabaseFileRepository,
 						s3Service: S3Service,
-						config: EnvironmentConfigService,
+						environmentConfig: EnvironmentConfigService,
 					) =>
 						new UseCaseProxy(
 							new CreateMusicUseCase(
@@ -97,10 +99,11 @@ export class MusicUsecasesProxyModule {
 								repository,
 								fileRepository,
 								s3Service,
-								config,
+								environmentConfig,
 							),
 						),
 				},
+				//PUT
 				{
 					inject: [
 						LoggerService,
@@ -114,6 +117,7 @@ export class MusicUsecasesProxyModule {
 						repository: DatabaseMusicRepository,
 					) => new UseCaseProxy(new UpdateMusicUseCase(logger, repository)),
 				},
+				//PUT
 				{
 					inject: [
 						LoggerService,
@@ -140,6 +144,7 @@ export class MusicUsecasesProxyModule {
 							),
 						),
 				},
+				//DELETE
 				{
 					inject: [
 						LoggerService,

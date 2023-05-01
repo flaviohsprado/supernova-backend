@@ -1,49 +1,43 @@
 import { InputType } from '@nestjs/graphql';
-import { IsOptionalNumber } from 'server/main/decorators/validators/isOptionalNumber.decorator';
+import { IsOptionalBoolean } from 'server/main/decorators/validators/isOptionalBoolean.decorator';
 import { IsOptionalString } from 'server/main/decorators/validators/isOptionalString.decorator';
-import { IsRequiredNumber } from 'server/main/decorators/validators/isRequiredNumber.decorator';
+import { IsRequiredBoolean } from 'server/main/decorators/validators/isRequiredBoolean.decorator';
 import { IsRequiredString } from 'server/main/decorators/validators/isRequiredString.decorator';
 import { uuid } from 'uuidv4';
 import { CreateFileDTO } from '../file/file.dto';
 
 @InputType()
-export class CreateMusicDTO {
+export class CreatePlaylistDTO {
 	@IsOptionalString()
 	public id?: string;
 
 	@IsRequiredString()
-	public albumId: string;
+	public userId: string;
 
 	@IsRequiredString()
 	public title: string;
 
-	@IsRequiredNumber()
-	public duration: number;
+	@IsRequiredBoolean()
+	public isPublic: boolean;
 
 	@IsOptionalString()
 	public file?: CreateFileDTO;
 
-	constructor(props: CreateMusicDTO) {
+	constructor(props: CreatePlaylistDTO) {
 		Object.assign(this, props);
 		this.id = uuid();
 	}
 }
 
 @InputType()
-export class UpdateMusicDTO {
-	@IsOptionalString()
-	public albumId?: string;
-
+export class UpdatePlaylistDTO {
 	@IsOptionalString()
 	public title?: string;
 
-	@IsOptionalNumber()
-	public duration?: number;
+	@IsOptionalBoolean()
+	public isPublic?: boolean;
 
-	@IsOptionalString()
-	public file?: CreateFileDTO;
-
-	constructor(props: UpdateMusicDTO) {
+	constructor(props: UpdatePlaylistDTO) {
 		Object.assign(this, props);
 	}
 }

@@ -9,7 +9,7 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
 } from 'typeorm';
 import { Artist } from './artist.entity';
 import { File } from './file.entity';
@@ -22,7 +22,6 @@ export class Album {
 	@PrimaryGeneratedColumn('uuid')
 	public id: string;
 
-	@Field()
 	@IsRequiredStringColumn()
 	public artistId: string;
 
@@ -54,6 +53,7 @@ export class Album {
 	@UpdateDateColumn()
 	public updatedAt: Date;
 
+	@Field()
 	@ManyToOne(() => Artist, (Artist) => Artist.id, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'artistId' })
 	public artist: Artist;

@@ -1,6 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { File } from 'server/domain/entities/file.entity';
-import { User } from '../../../domain/entities/user.entity';
 
 @ObjectType()
 export class UserPresenter {
@@ -25,7 +24,7 @@ export class UserPresenter {
 	@Field({ nullable: true })
 	public updatedAt?: Date;
 
-	constructor(user: User) {
+	constructor(user: UserPresenter) {
 		Object.assign(this, user);
 	}
 }

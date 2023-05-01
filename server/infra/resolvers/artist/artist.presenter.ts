@@ -23,6 +23,11 @@ export class ArtistPresenter {
 	public albums?: Album[];
 
 	constructor(artist: Artist) {
-		Object.assign(this, artist);
+		this.id = artist.id;
+		this.name = artist.name;
+		this.monthlyListeners = artist.monthlyListeners;
+		this.createdAt = artist.createdAt;
+		this.updatedAt = artist.updatedAt;
+		this.albums = artist.albums;
 	}
 }
