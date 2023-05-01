@@ -1,5 +1,6 @@
 import { Playlist } from 'server/domain/entities/playlist.entity';
 import { IPlaylistRepository } from 'server/domain/repositories/playlist.repository';
+import { PlaylistPresenter } from 'server/infra/resolvers/playlist/playlist.presenter';
 import { ICacheManager } from '../../interfaces/cache.interface';
 import { IExceptionService } from '../../interfaces/exceptions.interface';
 
@@ -10,12 +11,12 @@ export class FindOnePlaylistUseCase {
 		private readonly cacheManager: ICacheManager,
 	) {}
 
-	public async execute(id: string): Promise<Playlist> {
+	public async execute(id: string): Promise<PlaylistPresenter> {
 		const cachedPlaylist = await this.cacheManager.getCachedObject<Playlist>(
 			'playlist',
 		);
 
-		if (cachedPlaylist) return cachedPlaylist;
+		if (cachedPlaylist && cachedPlaylist.id === id) return cachedPlaylist;
 
 		const playlist: Playlist = await this.repository.findOne(id);
 
@@ -26,6 +27,6 @@ export class FindOnePlaylistUseCase {
 
 		await this.cacheManager.setObjectInCache('playlist', playlist);
 
-		return playlist;
+		return new PlaylistPresenter(playlist);
 	}
 }

@@ -10,7 +10,7 @@ import {
 	FindAllMusicUseCase,
 	FindOneMusicUseCase,
 	UpdateMusicFileUseCase,
-	UpdateMusicUseCase
+	UpdateMusicUseCase,
 } from '../../../domain/use-cases/music';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';

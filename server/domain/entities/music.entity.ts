@@ -7,7 +7,7 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
 } from 'typeorm';
 import { IsRequiredStringColumn } from '../../main/decorators/columns/isRequiredStringColumn.decorator';
 import { Album } from './album.entity';

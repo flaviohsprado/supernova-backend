@@ -6,4 +6,3 @@ export * from './find-one-playlist.usecase';
 export * from './insert-music-playlist.usecase';
 export * from './update-playlist-file.usecase';
 export * from './update-playlist.usecase';
-

@@ -1,3 +1,4 @@
+import { PlaylistPresenter } from '../../../infra/resolvers/playlist/playlist.presenter';
 import { Playlist } from '../../entities/playlist.entity';
 import { ICacheManager } from '../../interfaces/cache.interface';
 import { IPlaylistRepository } from '../../repositories/playlist.repository';
@@ -8,7 +9,7 @@ export class FindAllPlaylistUseCase {
 		private readonly cacheManager: ICacheManager,
 	) {}
 
-	public async execute(userId?: string): Promise<Playlist[]> {
+	public async execute(userId?: string): Promise<PlaylistPresenter[]> {
 		const cachedPlaylists = await this.cacheManager.getCachedObject<Playlist[]>(
 			'playlists',
 		);
@@ -19,6 +20,6 @@ export class FindAllPlaylistUseCase {
 
 		await this.cacheManager.setObjectInCache('playlists', playlists);
 
-		return playlists;
+		return playlists.map((playlist) => new PlaylistPresenter(playlist));
 	}
 }

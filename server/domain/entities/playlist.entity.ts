@@ -8,7 +8,7 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToOne,
-	PrimaryGeneratedColumn
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { File } from './file.entity';
 import { Music } from './music.entity';

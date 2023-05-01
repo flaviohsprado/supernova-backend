@@ -14,7 +14,7 @@ import {
 	FindOnePlaylistUseCase,
 	InsertMusicPlaylistUseCase,
 	UpdatePlaylistFileUseCase,
-	UpdatePlaylistUseCase
+	UpdatePlaylistUseCase,
 } from '../../../domain/use-cases/playlist';
 import { PlaylistUsecasesProxyModule } from '../../usecases-proxy/playlist/playlist-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
@@ -49,21 +49,16 @@ export class PlaylistResolver {
 		@Args('userId', { nullable: true }) userId: string,
 		@CurrentUser() user: IAuth,
 	): Promise<PlaylistPresenter[]> {
-		const playlists = await this.findAllPlaylistUseCase
+		return await this.findAllPlaylistUseCase
 			.getInstance()
 			.execute(userId || user.id);
-
-		return playlists.map((playlist) => new PlaylistPresenter(playlist));
 	}
 
 	@Query((returns) => PlaylistPresenter)
 	public async findOnePlaylist(
 		@Args('id') id: string,
 	): Promise<PlaylistPresenter> {
-		const playlist = await this.findOnePlaylistUseCase
-			.getInstance()
-			.execute(id);
-		return new PlaylistPresenter(playlist);
+		return await this.findOnePlaylistUseCase.getInstance().execute(id);
 	}
 
 	@Mutation((returns) => PlaylistPresenter)
@@ -71,11 +66,7 @@ export class PlaylistResolver {
 		@Args('playlist') playlist: CreatePlaylistDTO,
 	): Promise<PlaylistPresenter> {
 		const newPlaylist = new CreatePlaylistDTO(playlist);
-		const createdPlaylist = await this.createPlaylistUseCase
-			.getInstance()
-			.execute(newPlaylist);
-
-		return new PlaylistPresenter(createdPlaylist);
+		return await this.createPlaylistUseCase.getInstance().execute(newPlaylist);
 	}
 
 	@Mutation((returns) => PlaylistPresenter)

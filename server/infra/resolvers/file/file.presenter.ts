@@ -3,15 +3,17 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class FilePresenter {
 	@Field()
-	public fieldname: string;
+	public fieldname?: string;
 
 	@Field()
-	public originalname: string;
+	public originalname?: string;
 
 	@Field()
-	public url: string;
+	public url?: string;
 
 	constructor(props: FilePresenter) {
-		Object.assign(this, props);
+		this.fieldname = props.fieldname;
+		this.originalname = props.originalname;
+		this.url = props.url;
 	}
 }

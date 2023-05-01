@@ -6,7 +6,7 @@ import { Playlist } from '../../domain/entities/playlist.entity';
 import { IPlaylistRepository } from '../../domain/repositories/playlist.repository';
 import {
 	CreatePlaylistDTO,
-	UpdatePlaylistDTO
+	UpdatePlaylistDTO,
 } from '../resolvers/playlist/playlist.dto';
 
 @Injectable()
@@ -25,6 +25,7 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 				'musics',
 				'musics.file',
 				'musics.album',
+				'musics.album.artist',
 				'file',
 			],
 		});
@@ -38,6 +39,7 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 				'user.file',
 				'musics',
 				'musics.album',
+				'musics.album.artist',
 				'musics.file',
 				'file',
 			],
