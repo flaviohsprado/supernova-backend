@@ -40,6 +40,7 @@ export class DatabasePlaylistRepository implements IPlaylistRepository {
 				'musics',
 				'musics.album',
 				'musics.album.artist',
+				'musics.album.file',
 				'musics.file',
 				'file',
 			],
