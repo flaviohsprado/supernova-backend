@@ -1,6 +1,6 @@
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IMusicRepository } from '../../abstracts/repositories/music.repository';
 import { Music } from '../../entities/music.entity';
-import { ICacheManager } from '../../interfaces/cache.interface';
-import { IMusicRepository } from '../../repositories/music.repository';
 
 export class FindAllMusicUseCase {
 	constructor(

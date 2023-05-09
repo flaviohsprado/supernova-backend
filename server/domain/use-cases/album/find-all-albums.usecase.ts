@@ -1,6 +1,6 @@
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IAlbumRepository } from '../../abstracts/repositories/album.repository';
 import { Album } from '../../entities/album.entity';
-import { IAlbumRepository } from '../../repositories/album.repository';
-import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindAllAlbumUseCase {
 	constructor(

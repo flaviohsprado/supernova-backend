@@ -1,11 +1,11 @@
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
-import { OwnerType } from 'server/main/enums/ownerType.enum';
+import { IFileRepository } from '../../../domain/abstracts/repositories/file.repository';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { OwnerType } from '../../../main/enums/ownerType.enum';
+import { IUploadService } from '../../../main/interfaces/upload.interface';
+import { CreateFileDTO } from '../../../presentation/dtos/file.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IAlbumRepository } from '../../abstracts/repositories/album.repository';
 import { Album } from '../../entities/album.entity';
-import { ILogger } from '../../logger/logger.interface';
-import { IAlbumRepository } from '../../repositories/album.repository';
 
 export class UpdateAlbumFileUseCase {
 	constructor(

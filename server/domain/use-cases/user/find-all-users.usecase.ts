@@ -1,6 +1,6 @@
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IUserRepository } from '../../abstracts/repositories/user.repository';
 import { User } from '../../entities/user.entity';
-import { IUserRepository } from '../../repositories/user.repository';
-import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindAllUserUseCase {
 	constructor(

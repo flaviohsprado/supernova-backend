@@ -1,7 +1,7 @@
-import { PlaylistPresenter } from '../../../infra/resolvers/playlist/playlist.presenter';
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { PlaylistPresenter } from '../../../presentation/presenters/playlist.presenter';
+import { IPlaylistRepository } from '../../abstracts/repositories/playlist.repository';
 import { Playlist } from '../../entities/playlist.entity';
-import { ICacheManager } from '../../interfaces/cache.interface';
-import { IPlaylistRepository } from '../../repositories/playlist.repository';
 
 export class FindAllPlaylistUseCase {
 	constructor(

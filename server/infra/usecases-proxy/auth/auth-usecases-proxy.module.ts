@@ -1,24 +1,21 @@
-import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
 import { DynamicModule, Module } from '@nestjs/common';
-import { UseCaseProxy } from '../usecase-proxy';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
+import { DatabaseUserRepository } from '../../../data/repositories/user.repository';
+import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { RepositoriesModule } from '../../repositories/repositories.module';
-import { DatabaseUserRepository } from '../../repositories/user.repository';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { JwtTokenService } from '../../services/jwt/jwt.service';
-import { BcryptService } from '../../services/bcrypt/bcrypt.service';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
+import { BcryptService } from '../../services/bcrypt/bcrypt.service';
 import { JwtModule } from '../../services/jwt/jwt.module';
+import { JwtTokenService } from '../../services/jwt/jwt.service';
+import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
 	imports: [
 		LoggerModule,
 		EnvironmentConfigModule,
 		RepositoriesModule,
-		ExceptionsModule,
 		BcryptModule,
 		JwtModule,
 	],
@@ -35,7 +32,6 @@ export class AuthUsecasesProxyModule {
 						LoggerService,
 						JwtTokenService,
 						BcryptService,
-						ExceptionsService,
 						DatabaseUserRepository,
 					],
 					provide: AuthUsecasesProxyModule.LOGIN_USECASES_PROXY,
@@ -43,7 +39,6 @@ export class AuthUsecasesProxyModule {
 						logger: LoggerService,
 						jwtService: JwtTokenService,
 						bcryptService: BcryptService,
-						exceptionService: ExceptionsService,
 						userRepository: DatabaseUserRepository,
 					) =>
 						new UseCaseProxy(
@@ -51,7 +46,6 @@ export class AuthUsecasesProxyModule {
 								logger,
 								jwtService,
 								bcryptService,
-								exceptionService,
 								userRepository,
 							),
 						),

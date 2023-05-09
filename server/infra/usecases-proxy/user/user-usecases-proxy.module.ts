@@ -1,10 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
-import { JwtModule } from 'server/infra/services/jwt/jwt.module';
-import { JwtTokenService } from 'server/infra/services/jwt/jwt.service';
-import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
-import { S3Service } from 'server/infra/services/s3/s3.service';
+import { DatabaseFileRepository } from '../../../data/repositories/file.repository';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
+import { DatabaseUserRepository } from '../../../data/repositories/user.repository';
 import {
 	CreateUserUseCase,
 	DeleteUserUseCase,
@@ -14,15 +11,16 @@ import {
 	UpdateUserFileUseCase,
 	UpdateUserUseCase,
 } from '../../../domain/use-cases/user';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { JwtModule } from '../../../infra/services/jwt/jwt.module';
+import { JwtTokenService } from '../../../infra/services/jwt/jwt.service';
+import { S3ConfigModule } from '../../../infra/services/s3/s3.module';
+import { S3Service } from '../../../infra/services/s3/s3.service';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
 import { CacheService } from '../../config/redis/cache.service';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { RepositoriesModule } from '../../repositories/repositories.module';
-import { DatabaseUserRepository } from '../../repositories/user.repository';
 import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
 import { BcryptService } from '../../services/bcrypt/bcrypt.service';
 import { UseCaseProxy } from '../usecase-proxy';
@@ -33,7 +31,6 @@ import { UseCaseProxy } from '../usecase-proxy';
 		EnvironmentConfigModule,
 		RepositoriesModule,
 		BcryptModule,
-		ExceptionsModule,
 		CacheConfigModule,
 		JwtModule,
 		S3ConfigModule,
@@ -62,35 +59,23 @@ export class UserUsecasesProxyModule {
 						new UseCaseProxy(new FindAllUserUseCase(repository, cacheService)),
 				},
 				{
-					inject: [DatabaseUserRepository, ExceptionsService, CacheService],
+					inject: [DatabaseUserRepository, CacheService],
 					provide: UserUsecasesProxyModule.GET_USER_USECASES_PROXY,
 					useFactory: (
 						repository: DatabaseUserRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
-						new UseCaseProxy(
-							new FindOneUserUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
-						),
+						new UseCaseProxy(new FindOneUserUseCase(repository, cacheService)),
 				},
 				{
-					inject: [DatabaseUserRepository, ExceptionsService, CacheService],
+					inject: [DatabaseUserRepository, CacheService],
 					provide: UserUsecasesProxyModule.FIND_USER_BY_KEY_USECASES_PROXY,
 					useFactory: (
 						repository: DatabaseUserRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
 						new UseCaseProxy(
-							new FindUserByKeyUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
+							new FindUserByKeyUseCase(repository, cacheService),
 						),
 				},
 				{
@@ -100,7 +85,6 @@ export class UserUsecasesProxyModule {
 						DatabaseFileRepository,
 						BcryptService,
 						JwtTokenService,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 					],
@@ -111,7 +95,6 @@ export class UserUsecasesProxyModule {
 						fileRepository: DatabaseFileRepository,
 						bcryptService: BcryptService,
 						jwtService: JwtTokenService,
-						exceptionService: ExceptionsService,
 						s3Service: S3Service,
 						config: EnvironmentConfigService,
 					) =>
@@ -122,33 +105,21 @@ export class UserUsecasesProxyModule {
 								fileRepository,
 								bcryptService,
 								jwtService,
-								exceptionService,
 								s3Service,
 								config,
 							),
 						),
 				},
 				{
-					inject: [
-						LoggerService,
-						DatabaseUserRepository,
-						BcryptService,
-						ExceptionsService,
-					],
+					inject: [LoggerService, DatabaseUserRepository, BcryptService],
 					provide: UserUsecasesProxyModule.PUT_USER_USECASES_PROXY,
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabaseUserRepository,
 						bcryptService: BcryptService,
-						exceptionService: ExceptionsService,
 					) =>
 						new UseCaseProxy(
-							new UpdateUserUseCase(
-								logger,
-								repository,
-								bcryptService,
-								exceptionService,
-							),
+							new UpdateUserUseCase(logger, repository, bcryptService),
 						),
 				},
 				{
@@ -181,7 +152,6 @@ export class UserUsecasesProxyModule {
 					inject: [
 						LoggerService,
 						DatabaseUserRepository,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 						DatabaseFileRepository,
@@ -190,7 +160,6 @@ export class UserUsecasesProxyModule {
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabaseUserRepository,
-						exceptionService: ExceptionsService,
 						s3Service: S3Service,
 						config: EnvironmentConfigService,
 						fileRepository: DatabaseFileRepository,
@@ -199,7 +168,6 @@ export class UserUsecasesProxyModule {
 							new DeleteUserUseCase(
 								logger,
 								repository,
-								exceptionService,
 								s3Service,
 								config,
 								fileRepository,

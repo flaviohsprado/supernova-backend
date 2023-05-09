@@ -1,7 +1,7 @@
-import { UpdateArtistDTO } from '../../../infra/resolvers/artist/artist.dto';
+import { UpdateArtistDTO } from '../../../presentation/dtos/artist.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IArtistRepository } from '../../abstracts/repositories/artist.repository';
 import { Artist } from '../../entities/artist.entity';
-import { ILogger } from '../../logger/logger.interface';
-import { IArtistRepository } from '../../repositories/artist.repository';
 
 export class UpdateArtistUseCase {
 	constructor(

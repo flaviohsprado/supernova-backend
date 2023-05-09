@@ -1,9 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
-import { JwtModule } from 'server/infra/services/jwt/jwt.module';
-import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
-import { S3Service } from 'server/infra/services/s3/s3.service';
+import { DatabaseFileRepository } from '../../../data/repositories/file.repository';
+import { DatabaseMusicRepository } from '../../../data/repositories/music.repository';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
 import {
 	CreateMusicUseCase,
 	DeleteMusicUseCase,
@@ -12,15 +10,15 @@ import {
 	UpdateMusicFileUseCase,
 	UpdateMusicUseCase,
 } from '../../../domain/use-cases/music';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { JwtModule } from '../../../infra/services/jwt/jwt.module';
+import { S3ConfigModule } from '../../../infra/services/s3/s3.module';
+import { S3Service } from '../../../infra/services/s3/s3.service';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
 import { CacheService } from '../../config/redis/cache.service';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { DatabaseMusicRepository } from '../../repositories/music.repository';
-import { RepositoriesModule } from '../../repositories/repositories.module';
 import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
 import { BcryptService } from '../../services/bcrypt/bcrypt.service';
 import { UseCaseProxy } from '../usecase-proxy';
@@ -31,7 +29,6 @@ import { UseCaseProxy } from '../usecase-proxy';
 		EnvironmentConfigModule,
 		RepositoriesModule,
 		BcryptModule,
-		ExceptionsModule,
 		CacheConfigModule,
 		JwtModule,
 		S3ConfigModule,
@@ -61,20 +58,13 @@ export class MusicUsecasesProxyModule {
 				},
 				//GET
 				{
-					inject: [DatabaseMusicRepository, ExceptionsService, CacheService],
+					inject: [DatabaseMusicRepository, CacheService],
 					provide: MusicUsecasesProxyModule.GET_MUSIC_USECASES_PROXY,
 					useFactory: (
 						repository: DatabaseMusicRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
-						new UseCaseProxy(
-							new FindOneMusicUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
-						),
+						new UseCaseProxy(new FindOneMusicUseCase(repository, cacheService)),
 				},
 				//POST
 				{
@@ -105,12 +95,7 @@ export class MusicUsecasesProxyModule {
 				},
 				//PUT
 				{
-					inject: [
-						LoggerService,
-						DatabaseMusicRepository,
-						BcryptService,
-						ExceptionsService,
-					],
+					inject: [LoggerService, DatabaseMusicRepository, BcryptService],
 					provide: MusicUsecasesProxyModule.PUT_MUSIC_USECASES_PROXY,
 					useFactory: (
 						logger: LoggerService,
@@ -149,7 +134,6 @@ export class MusicUsecasesProxyModule {
 					inject: [
 						LoggerService,
 						DatabaseMusicRepository,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 						DatabaseFileRepository,
@@ -158,7 +142,6 @@ export class MusicUsecasesProxyModule {
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabaseMusicRepository,
-						exceptionService: ExceptionsService,
 						s3Service: S3Service,
 						config: EnvironmentConfigService,
 						fileRepository: DatabaseFileRepository,
@@ -167,7 +150,6 @@ export class MusicUsecasesProxyModule {
 							new DeleteMusicUseCase(
 								logger,
 								repository,
-								exceptionService,
 								s3Service,
 								config,
 								fileRepository,

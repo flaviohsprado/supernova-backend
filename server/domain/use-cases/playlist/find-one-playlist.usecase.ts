@@ -1,13 +1,12 @@
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { IPlaylistRepository } from 'server/domain/abstracts/repositories/playlist.repository';
 import { Playlist } from 'server/domain/entities/playlist.entity';
-import { IPlaylistRepository } from 'server/domain/repositories/playlist.repository';
-import { PlaylistPresenter } from 'server/infra/resolvers/playlist/playlist.presenter';
-import { ICacheManager } from '../../interfaces/cache.interface';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
+import { PlaylistPresenter } from 'server/presentation/presenters/playlist.presenter';
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
 
 export class FindOnePlaylistUseCase {
 	constructor(
 		private readonly repository: IPlaylistRepository,
-		private readonly exceptionService: IExceptionService,
 		private readonly cacheManager: ICacheManager,
 	) {}
 
@@ -21,8 +20,9 @@ export class FindOnePlaylistUseCase {
 		const playlist: Playlist = await this.repository.findOne(id);
 
 		if (!playlist)
-			this.exceptionService.throwNotFoundException({
+			throw new NotFoundException({
 				message: 'Playlist not found',
+				status: HttpStatus.NOT_FOUND,
 			});
 
 		await this.cacheManager.setObjectInCache('playlist', playlist);
