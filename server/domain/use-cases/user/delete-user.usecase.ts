@@ -1,19 +1,17 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { IFileRepository } from 'server/domain/abstracts/repositories/file.repository';
 import { File } from 'server/domain/entities/file.entity';
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
 import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
 import { OwnerType } from 'server/main/enums/ownerType.enum';
+import { IUploadService } from 'server/main/interfaces/upload.interface';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IUserRepository } from '../../abstracts/repositories/user.repository';
 import { User } from '../../entities/user.entity';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
-import { ILogger } from '../../logger/logger.interface';
-import { IUserRepository } from '../../repositories/user.repository';
 
 export class DeleteUserUseCase {
 	constructor(
 		private readonly logger: ILogger,
 		private readonly repository: IUserRepository,
-		private readonly exceptionService: IExceptionService,
 		private readonly uploadService: IUploadService,
 		private readonly environmentConfig: EnvironmentConfigService,
 		private readonly fileRepository: IFileRepository,
@@ -31,7 +29,7 @@ export class DeleteUserUseCase {
 
 			return userDeleted;
 		} else {
-			this.exceptionService.throwNotFoundException({
+			throw new NotFoundException({
 				message: 'User not found!',
 				statusCode: HttpStatus.NOT_FOUND,
 			});

@@ -1,6 +1,6 @@
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IArtistRepository } from '../../abstracts/repositories/artist.repository';
 import { Artist } from '../../entities/artist.entity';
-import { IArtistRepository } from '../../repositories/artist.repository';
-import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindAllArtistUseCase {
 	constructor(

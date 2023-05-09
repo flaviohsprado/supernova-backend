@@ -1,12 +1,11 @@
+import { NotFoundException } from '@nestjs/common';
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IUserRepository } from '../../abstracts/repositories/user.repository';
 import { User } from '../../entities/user.entity';
-import { IUserRepository } from '../../repositories/user.repository';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
-import { ICacheManager } from '../../interfaces/cache.interface';
 
 export class FindUserByKeyUseCase {
 	constructor(
 		private readonly repository: IUserRepository,
-		private readonly exceptionService: IExceptionService,
 		private readonly cacheManager: ICacheManager,
 	) {}
 
@@ -19,10 +18,7 @@ export class FindUserByKeyUseCase {
 
 		const user: User = await this.repository.findByKey(key, value);
 
-		if (!user)
-			this.exceptionService.throwNotFoundException({
-				message: 'User not found',
-			});
+		if (!user) throw new NotFoundException({ message: 'User not found' });
 
 		await this.cacheManager.setObjectInCache('userById', user);
 

@@ -1,19 +1,17 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { IFileRepository } from 'server/domain/abstracts/repositories/file.repository';
 import { File } from 'server/domain/entities/file.entity';
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
 import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
 import { OwnerType } from 'server/main/enums/ownerType.enum';
+import { IUploadService } from 'server/main/interfaces/upload.interface';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IPlaylistRepository } from '../../abstracts/repositories/playlist.repository';
 import { Playlist } from '../../entities/playlist.entity';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
-import { ILogger } from '../../logger/logger.interface';
-import { IPlaylistRepository } from '../../repositories/playlist.repository';
 
 export class DeletePlaylistUseCase {
 	constructor(
 		private readonly logger: ILogger,
 		private readonly repository: IPlaylistRepository,
-		private readonly exceptionService: IExceptionService,
 		private readonly fileRepository: IFileRepository,
 		private readonly uploadService: IUploadService,
 		private readonly environmentConfig: EnvironmentConfigService,
@@ -32,7 +30,7 @@ export class DeletePlaylistUseCase {
 
 			return playlistDeleted;
 		} else {
-			this.exceptionService.throwNotFoundException({
+			throw new NotFoundException({
 				message: 'Playlist not found!',
 				statusCode: HttpStatus.NOT_FOUND,
 			});

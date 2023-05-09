@@ -1,7 +1,7 @@
+import { ILogger } from 'server/domain/abstracts/logger.interface';
+import { IMusicRepository } from 'server/domain/abstracts/repositories/music.repository';
+import { IPlaylistRepository } from 'server/domain/abstracts/repositories/playlist.repository';
 import { Playlist } from 'server/domain/entities/playlist.entity';
-import { ILogger } from 'server/domain/logger/logger.interface';
-import { IMusicRepository } from 'server/domain/repositories/music.repository';
-import { IPlaylistRepository } from 'server/domain/repositories/playlist.repository';
 
 export class InsertMusicPlaylistUseCase {
 	constructor(

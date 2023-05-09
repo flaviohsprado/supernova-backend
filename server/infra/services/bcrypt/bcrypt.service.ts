@@ -1,6 +1,6 @@
-import { IBcryptService } from './../../../domain/interfaces/bcrypt.interface';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { IBcryptService } from '../../../main/interfaces/bcrypt.interface';
 
 @Injectable()
 export class BcryptService implements IBcryptService {

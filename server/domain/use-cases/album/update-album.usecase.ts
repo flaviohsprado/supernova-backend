@@ -1,7 +1,7 @@
-import { UpdateAlbumDTO } from '../../../infra/resolvers/album/album.dto';
+import { UpdateAlbumDTO } from '../../../presentation/dtos/album.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IAlbumRepository } from '../../abstracts/repositories/album.repository';
 import { Album } from '../../entities/album.entity';
-import { ILogger } from '../../logger/logger.interface';
-import { IAlbumRepository } from '../../repositories/album.repository';
 
 export class UpdateAlbumUseCase {
 	constructor(

@@ -1,8 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+	BadRequestException,
+	HttpStatus,
+	Inject,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerService } from '../../logger/logger.service';
 import { AuthUsecasesProxyModule } from '../../usecases-proxy/auth/auth-usecases-proxy.module';
 import { UseCaseProxy } from '../../usecases-proxy/usecase-proxy';
@@ -13,7 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 		@Inject(AuthUsecasesProxyModule.LOGIN_USECASES_PROXY)
 		private readonly loginUsecaseProxy: UseCaseProxy<LoginUseCase>,
 		private readonly logger: LoggerService,
-		private readonly exceptionService: ExceptionsService,
 	) {
 		//the passport-local strategy by default expects properties called
 		//username and password in the request body: 'Missing credentials error'
@@ -29,7 +33,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 				'LocalStrategy',
 				`Email or password is missing, BadRequestException`,
 			);
-			this.exceptionService.throwUnauthorizedException();
+			throw new BadRequestException({
+				message: 'Email or password is missing.',
+				status: HttpStatus.BAD_REQUEST,
+			});
 		}
 
 		const user = await this.loginUsecaseProxy
@@ -39,8 +46,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 		if (!user) {
 			this.logger.warn('LocalStrategy', `Invalid email or password`);
 
-			this.exceptionService.throwUnauthorizedException({
+			throw new UnauthorizedException({
 				message: 'Invalid email or password.',
+				status: HttpStatus.UNAUTHORIZED,
 			});
 		}
 

@@ -1,7 +1,7 @@
-import { UpdatePlaylistDTO } from '../../../infra/resolvers/playlist/playlist.dto';
+import { UpdatePlaylistDTO } from '../../../presentation/dtos/playlist.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IPlaylistRepository } from '../../abstracts/repositories/playlist.repository';
 import { Playlist } from '../../entities/playlist.entity';
-import { ILogger } from '../../logger/logger.interface';
-import { IPlaylistRepository } from '../../repositories/playlist.repository';
 
 export class UpdatePlaylistUseCase {
 	constructor(

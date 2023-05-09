@@ -1,12 +1,11 @@
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
+import { IMusicRepository } from '../../abstracts/repositories/music.repository';
 import { Music } from '../../entities/music.entity';
-import { ICacheManager } from '../../interfaces/cache.interface';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
-import { IMusicRepository } from '../../repositories/music.repository';
 
 export class FindOneMusicUseCase {
 	constructor(
 		private readonly repository: IMusicRepository,
-		private readonly exceptionService: IExceptionService,
 		private readonly cacheManager: ICacheManager,
 	) {}
 
@@ -18,8 +17,9 @@ export class FindOneMusicUseCase {
 		const music: Music = await this.repository.findOne(id);
 
 		if (!music)
-			this.exceptionService.throwNotFoundException({
+			throw new NotFoundException({
 				message: 'Music not found',
+				status: HttpStatus.NOT_FOUND,
 			});
 
 		await this.cacheManager.setObjectInCache('music', music);

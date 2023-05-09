@@ -1,22 +1,20 @@
-import { HttpStatus } from '@nestjs/common';
-import { IExceptionService } from 'server/domain/interfaces/exceptions.interface';
-import { UpdateUserDTO } from '../../../infra/resolvers/user/user.dto';
+import { ForbiddenException, HttpStatus } from '@nestjs/common';
+import { IBcryptService } from '../../../main/interfaces/bcrypt.interface';
+import { UpdateUserDTO } from '../../../presentation/dtos/user.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IUserRepository } from '../../abstracts/repositories/user.repository';
 import { User } from '../../entities/user.entity';
-import { IBcryptService } from '../../interfaces/bcrypt.interface';
-import { ILogger } from '../../logger/logger.interface';
-import { IUserRepository } from '../../repositories/user.repository';
 
 export class UpdateUserUseCase {
 	constructor(
 		private readonly logger: ILogger,
 		private readonly repository: IUserRepository,
 		private readonly bcryptService: IBcryptService,
-		private readonly exceptionService: IExceptionService,
 	) {}
 
 	public async execute(id: string, user: UpdateUserDTO): Promise<User> {
 		if (await this.repository.alreadyExists('email', user.email, id))
-			this.exceptionService.throwForbiddenException({
+			throw new ForbiddenException({
 				message: 'Email already exists in app!',
 				statusCode: HttpStatus.FORBIDDEN,
 			});
