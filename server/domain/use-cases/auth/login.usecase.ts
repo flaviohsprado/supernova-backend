@@ -1,18 +1,17 @@
-import { AuthDTO } from '../../../infra/resolvers/auth/auth.dto';
-import { AuthPresenter } from '../../../infra/resolvers/auth/auth.presenter';
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { IBcryptService } from '../../../main/interfaces/bcrypt.interface';
+import { IJwtService } from '../../../main/interfaces/jwt.interface';
+import { AuthDTO } from '../../../presentation/dtos/auth.dto';
+import { AuthPresenter } from '../../../presentation/presenters/auth.presenter';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IUserRepository } from '../../abstracts/repositories/user.repository';
 import { User } from '../../entities/user.entity';
-import { IBcryptService } from '../../interfaces/bcrypt.interface';
-import { IExceptionService } from '../../interfaces/exceptions.interface';
-import { IJwtService } from '../../interfaces/jwt.interface';
-import { ILogger } from '../../logger/logger.interface';
-import { IUserRepository } from '../../repositories/user.repository';
 
 export class LoginUseCase {
 	constructor(
 		private readonly logger: ILogger,
 		private readonly jwtService: IJwtService,
 		private readonly bcryptService: IBcryptService,
-		private readonly exceptionService: IExceptionService,
 		private readonly userRepository: IUserRepository,
 	) {}
 
@@ -36,8 +35,9 @@ export class LoginUseCase {
 		const user = await this.userRepository.findByKey('email', email);
 
 		if (!user)
-			this.exceptionService.throwNotFoundException({
+			throw new NotFoundException({
 				message: 'User not found!',
+				status: HttpStatus.NOT_FOUND,
 			});
 
 		if (await this.bcryptService.checkHash(password, user.password)) {

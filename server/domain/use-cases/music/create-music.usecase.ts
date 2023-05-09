@@ -1,12 +1,12 @@
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
-import { IMusicRepository } from 'server/domain/repositories/music.repository';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
-import { CreateMusicDTO } from 'server/infra/resolvers/music/music.dto';
-import { MusicPresenter } from 'server/infra/resolvers/music/music.presenter';
-import { OwnerType } from 'server/main/enums/ownerType.enum';
-import { ILogger } from '../../logger/logger.interface';
+import { IFileRepository } from '../../../domain/abstracts/repositories/file.repository';
+import { IMusicRepository } from '../../../domain/abstracts/repositories/music.repository';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { OwnerType } from '../../../main/enums/ownerType.enum';
+import { IUploadService } from '../../../main/interfaces/upload.interface';
+import { CreateFileDTO } from '../../../presentation/dtos/file.dto';
+import { CreateMusicDTO } from '../../../presentation/dtos/music.dto';
+import { MusicPresenter } from '../../../presentation/presenters/music.presenter';
+import { ILogger } from '../../abstracts/logger.interface';
 
 export class CreateMusicUseCase {
 	constructor(

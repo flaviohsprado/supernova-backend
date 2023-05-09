@@ -1,12 +1,12 @@
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IAlbumRepository } from 'server/domain/repositories/album.repository';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { CreateAlbumDTO } from 'server/infra/resolvers/album/album.dto';
-import { AlbumPresenter } from 'server/infra/resolvers/album/album.presenter';
-import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
-import { OwnerType } from 'server/main/enums/ownerType.enum';
-import { ILogger } from '../../logger/logger.interface';
+import { IAlbumRepository } from '../../../domain/abstracts/repositories/album.repository';
+import { IFileRepository } from '../../../domain/abstracts/repositories/file.repository';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { OwnerType } from '../../../main/enums/ownerType.enum';
+import { IUploadService } from '../../../main/interfaces/upload.interface';
+import { CreateAlbumDTO } from '../../../presentation/dtos/album.dto';
+import { CreateFileDTO } from '../../../presentation/dtos/file.dto';
+import { AlbumPresenter } from '../../../presentation/presenters/album.presenter';
+import { ILogger } from '../../abstracts/logger.interface';
 
 export class CreateAlbumUseCase {
 	constructor(

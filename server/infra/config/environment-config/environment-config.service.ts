@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AmbientConfig } from '../../../domain/config/ambient.interface';
-import { DatabaseConfig } from '../../../domain/config/database.interface';
-import { JWTConfig } from '../../../domain/config/jwt.interface';
-import { RedisConfig } from '../../../domain/config/redis.interface';
-import { S3Config } from '../../../domain/config/s3.interface';
+import { AmbientConfig } from '../../../domain/abstracts/config/ambient.interface';
+import { DatabaseConfig } from '../../../domain/abstracts/config/database.interface';
+import { JWTConfig } from '../../../domain/abstracts/config/jwt.interface';
+import { RedisConfig } from '../../../domain/abstracts/config/redis.interface';
+import { S3Config } from '../../../domain/abstracts/config/s3.interface';
 
 @Injectable()
 export class EnvironmentConfigService

@@ -1,9 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
-import { DatabaseMusicRepository } from 'server/infra/repositories/music.repository';
-import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
-import { S3Service } from 'server/infra/services/s3/s3.service';
+import { DatabaseFileRepository } from '../../../data/repositories/file.repository';
+import { DatabaseMusicRepository } from '../../../data/repositories/music.repository';
+import { DatabasePlaylistRepository } from '../../../data/repositories/playlist.repository';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
 import {
 	CreatePlaylistUseCase,
 	DeleteMusicPlaylistUseCase,
@@ -14,15 +13,14 @@ import {
 	UpdatePlaylistFileUseCase,
 	UpdatePlaylistUseCase,
 } from '../../../domain/use-cases/playlist';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { S3ConfigModule } from '../../../infra/services/s3/s3.module';
+import { S3Service } from '../../../infra/services/s3/s3.service';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
 import { CacheService } from '../../config/redis/cache.service';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { DatabasePlaylistRepository } from '../../repositories/playlist.repository';
-import { RepositoriesModule } from '../../repositories/repositories.module';
 import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
@@ -30,7 +28,6 @@ import { UseCaseProxy } from '../usecase-proxy';
 		LoggerModule,
 		EnvironmentConfigModule,
 		RepositoriesModule,
-		ExceptionsModule,
 		CacheConfigModule,
 		S3ConfigModule,
 	],
@@ -65,19 +62,14 @@ export class PlaylistUsecasesProxyModule {
 				},
 				//GET_PLAYLIST_USECASES_PROXY
 				{
-					inject: [DatabasePlaylistRepository, ExceptionsService, CacheService],
+					inject: [DatabasePlaylistRepository, CacheService],
 					provide: PlaylistUsecasesProxyModule.GET_PLAYLIST_USECASES_PROXY,
 					useFactory: (
 						repository: DatabasePlaylistRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
 						new UseCaseProxy(
-							new FindOnePlaylistUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
+							new FindOnePlaylistUseCase(repository, cacheService),
 						),
 				},
 				//INSERT_MUSIC_PLAYLIST_USECASES_PROXY
@@ -191,7 +183,6 @@ export class PlaylistUsecasesProxyModule {
 					inject: [
 						LoggerService,
 						DatabasePlaylistRepository,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 						DatabaseFileRepository,
@@ -200,7 +191,6 @@ export class PlaylistUsecasesProxyModule {
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabasePlaylistRepository,
-						exceptionService: ExceptionsService,
 						s3Service: S3Service,
 						config: EnvironmentConfigService,
 						fileRepository: DatabaseFileRepository,
@@ -209,7 +199,6 @@ export class PlaylistUsecasesProxyModule {
 							new DeletePlaylistUseCase(
 								logger,
 								repository,
-								exceptionService,
 								fileRepository,
 								s3Service,
 								config,

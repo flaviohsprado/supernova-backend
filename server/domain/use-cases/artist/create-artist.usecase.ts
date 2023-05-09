@@ -1,7 +1,7 @@
-import { IArtistRepository } from 'server/domain/repositories/artist.repository';
-import { CreateArtistDTO } from 'server/infra/resolvers/artist/artist.dto';
-import { ArtistPresenter } from 'server/infra/resolvers/artist/artist.presenter';
-import { ILogger } from '../../logger/logger.interface';
+import { IArtistRepository } from '../../../domain/abstracts/repositories/artist.repository';
+import { CreateArtistDTO } from '../../../presentation/dtos/artist.dto';
+import { ArtistPresenter } from '../../../presentation/presenters/artist.presenter';
+import { ILogger } from '../../abstracts/logger.interface';
 
 export class CreateArtistUseCase {
 	constructor(

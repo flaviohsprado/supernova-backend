@@ -1,4 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { DatabaseArtistRepository } from '../../../data/repositories/artist.repository';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
 import {
 	CreateArtistUseCase,
 	DeleteArtistUseCase,
@@ -9,12 +11,8 @@ import {
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
 import { CacheService } from '../../config/redis/cache.service';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { DatabaseArtistRepository } from '../../repositories/artist.repository';
-import { RepositoriesModule } from '../../repositories/repositories.module';
 import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
@@ -22,7 +20,6 @@ import { UseCaseProxy } from '../usecase-proxy';
 		LoggerModule,
 		EnvironmentConfigModule,
 		RepositoriesModule,
-		ExceptionsModule,
 		CacheConfigModule,
 	],
 })
@@ -49,19 +46,14 @@ export class ArtistUsecasesProxyModule {
 						),
 				},
 				{
-					inject: [DatabaseArtistRepository, ExceptionsService, CacheService],
+					inject: [DatabaseArtistRepository, CacheService],
 					provide: ArtistUsecasesProxyModule.GET_ARTIST_USECASES_PROXY,
 					useFactory: (
 						repository: DatabaseArtistRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
 						new UseCaseProxy(
-							new FindOneArtistUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
+							new FindOneArtistUseCase(repository, cacheService),
 						),
 				},
 				{
@@ -81,16 +73,12 @@ export class ArtistUsecasesProxyModule {
 					) => new UseCaseProxy(new UpdateArtistUseCase(logger, repository)),
 				},
 				{
-					inject: [LoggerService, DatabaseArtistRepository, ExceptionsService],
+					inject: [LoggerService, DatabaseArtistRepository],
 					provide: ArtistUsecasesProxyModule.DELETE_ARTIST_USECASES_PROXY,
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabaseArtistRepository,
-						exceptionService: ExceptionsService,
-					) =>
-						new UseCaseProxy(
-							new DeleteArtistUseCase(logger, repository, exceptionService),
-						),
+					) => new UseCaseProxy(new DeleteArtistUseCase(logger, repository)),
 				},
 			],
 			exports: [

@@ -1,6 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { ICacheManager } from '../../../domain/interfaces/cache.interface';
+import { ICacheManager } from '../../../main/interfaces/cache.interface';
 
 @Injectable()
 export class CacheService implements ICacheManager {

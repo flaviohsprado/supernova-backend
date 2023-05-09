@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectS3, S3 } from 'nestjs-s3';
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
+import { IUploadService } from '../../../main/interfaces/upload.interface';
+import { CreateFileDTO } from '../../../presentation/dtos/file.dto';
 
 @Injectable()
 export class S3Service implements IUploadService {

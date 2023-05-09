@@ -1,12 +1,12 @@
-import { IUploadService } from 'server/domain/interfaces/upload.interface';
-import { IFileRepository } from 'server/domain/repositories/file.repository';
-import { IPlaylistRepository } from 'server/domain/repositories/playlist.repository';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { CreateFileDTO } from 'server/infra/resolvers/file/file.dto';
-import { CreatePlaylistDTO } from 'server/infra/resolvers/playlist/playlist.dto';
-import { PlaylistPresenter } from 'server/infra/resolvers/playlist/playlist.presenter';
-import { OwnerType } from 'server/main/enums/ownerType.enum';
-import { ILogger } from '../../logger/logger.interface';
+import { IFileRepository } from '../../../domain/abstracts/repositories/file.repository';
+import { IPlaylistRepository } from '../../../domain/abstracts/repositories/playlist.repository';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { OwnerType } from '../../../main/enums/ownerType.enum';
+import { IUploadService } from '../../../main/interfaces/upload.interface';
+import { CreateFileDTO } from '../../../presentation/dtos/file.dto';
+import { CreatePlaylistDTO } from '../../../presentation/dtos/playlist.dto';
+import { PlaylistPresenter } from '../../../presentation/presenters/playlist.presenter';
+import { ILogger } from '../../abstracts/logger.interface';
 
 export class CreatePlaylistUseCase {
 	constructor(

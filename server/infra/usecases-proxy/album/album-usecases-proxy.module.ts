@@ -1,8 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { EnvironmentConfigService } from 'server/infra/config/environment-config/environment-config.service';
-import { DatabaseFileRepository } from 'server/infra/repositories/file.repository';
-import { S3ConfigModule } from 'server/infra/services/s3/s3.module';
-import { S3Service } from 'server/infra/services/s3/s3.service';
+import { DatabaseAlbumRepository } from '../../../data/repositories/album.repository';
+import { DatabaseFileRepository } from '../../../data/repositories/file.repository';
+import { RepositoriesModule } from '../../../data/repositories/repositories.module';
 import {
 	CreateAlbumUseCase,
 	DeleteAlbumUseCase,
@@ -11,15 +10,14 @@ import {
 	UpdateAlbumFileUseCase,
 	UpdateAlbumUseCase,
 } from '../../../domain/use-cases/album';
+import { EnvironmentConfigService } from '../../../infra/config/environment-config/environment-config.service';
+import { S3ConfigModule } from '../../../infra/services/s3/s3.module';
+import { S3Service } from '../../../infra/services/s3/s3.service';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { CacheConfigModule } from '../../config/redis/cache.module';
 import { CacheService } from '../../config/redis/cache.service';
-import { ExceptionsModule } from '../../exceptions/exceptions.module';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
-import { DatabaseAlbumRepository } from '../../repositories/album.repository';
-import { RepositoriesModule } from '../../repositories/repositories.module';
 import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
@@ -27,7 +25,6 @@ import { UseCaseProxy } from '../usecase-proxy';
 		LoggerModule,
 		EnvironmentConfigModule,
 		RepositoriesModule,
-		ExceptionsModule,
 		CacheConfigModule,
 		S3ConfigModule,
 	],
@@ -54,20 +51,13 @@ export class AlbumUsecasesProxyModule {
 						new UseCaseProxy(new FindAllAlbumUseCase(repository, cacheService)),
 				},
 				{
-					inject: [DatabaseAlbumRepository, ExceptionsService, CacheService],
+					inject: [DatabaseAlbumRepository, CacheService],
 					provide: AlbumUsecasesProxyModule.GET_ALBUM_USECASES_PROXY,
 					useFactory: (
 						repository: DatabaseAlbumRepository,
-						exceptionService: ExceptionsService,
 						cacheService: CacheService,
 					) =>
-						new UseCaseProxy(
-							new FindOneAlbumUseCase(
-								repository,
-								exceptionService,
-								cacheService,
-							),
-						),
+						new UseCaseProxy(new FindOneAlbumUseCase(repository, cacheService)),
 				},
 				{
 					inject: [
@@ -133,7 +123,6 @@ export class AlbumUsecasesProxyModule {
 					inject: [
 						LoggerService,
 						DatabaseAlbumRepository,
-						ExceptionsService,
 						S3Service,
 						EnvironmentConfigService,
 						DatabaseFileRepository,
@@ -142,7 +131,6 @@ export class AlbumUsecasesProxyModule {
 					useFactory: (
 						logger: LoggerService,
 						repository: DatabaseAlbumRepository,
-						exceptionService: ExceptionsService,
 						s3Service: S3Service,
 						config: EnvironmentConfigService,
 						fileRepository: DatabaseFileRepository,
@@ -151,7 +139,6 @@ export class AlbumUsecasesProxyModule {
 							new DeleteAlbumUseCase(
 								logger,
 								repository,
-								exceptionService,
 								s3Service,
 								config,
 								fileRepository,

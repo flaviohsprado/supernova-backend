@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ILogger } from '../../domain/logger/logger.interface';
+import { ILogger } from '../../domain/abstracts/logger.interface';
 import { EnvironmentConfigService } from '../config/environment-config/environment-config.service';
 
 @Injectable()

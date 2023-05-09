@@ -1,7 +1,7 @@
-import { UpdateMusicDTO } from '../../../infra/resolvers/music/music.dto';
+import { UpdateMusicDTO } from '../../../presentation/dtos/music.dto';
+import { ILogger } from '../../abstracts/logger.interface';
+import { IMusicRepository } from '../../abstracts/repositories/music.repository';
 import { Music } from '../../entities/music.entity';
-import { ILogger } from '../../logger/logger.interface';
-import { IMusicRepository } from '../../repositories/music.repository';
 
 export class UpdateMusicUseCase {
 	constructor(
