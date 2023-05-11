@@ -3,7 +3,6 @@ import { RepositoriesModule } from '../../../data/repositories/repositories.modu
 import { DatabaseUserRepository } from '../../../data/repositories/user.repository';
 import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
 import { WebSocketGatewayModule } from '../../../infra/services/websocket/websocket.module';
-import { UserGateway } from '../../../presentation/gateways/user.gateway';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
@@ -11,6 +10,7 @@ import { BcryptModule } from '../../services/bcrypt/bcrypt.module';
 import { BcryptService } from '../../services/bcrypt/bcrypt.service';
 import { JwtModule } from '../../services/jwt/jwt.module';
 import { JwtTokenService } from '../../services/jwt/jwt.service';
+import { UserGateway } from '../../services/websocket/user.gateway';
 import { UseCaseProxy } from '../usecase-proxy';
 
 @Module({
