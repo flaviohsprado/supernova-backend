@@ -2,6 +2,8 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { RepositoriesModule } from '../../../data/repositories/repositories.module';
 import { DatabaseUserRepository } from '../../../data/repositories/user.repository';
 import { LoginUseCase } from '../../../domain/use-cases/auth/login.usecase';
+import { WebSocketGatewayModule } from '../../../infra/services/websocket/websocket.module';
+import { UserGateway } from '../../../presentation/gateways/user.gateway';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
@@ -18,6 +20,7 @@ import { UseCaseProxy } from '../usecase-proxy';
 		RepositoriesModule,
 		BcryptModule,
 		JwtModule,
+		WebSocketGatewayModule,
 	],
 })
 export class AuthUsecasesProxyModule {
@@ -33,6 +36,7 @@ export class AuthUsecasesProxyModule {
 						JwtTokenService,
 						BcryptService,
 						DatabaseUserRepository,
+						UserGateway,
 					],
 					provide: AuthUsecasesProxyModule.LOGIN_USECASES_PROXY,
 					useFactory: (
@@ -40,6 +44,7 @@ export class AuthUsecasesProxyModule {
 						jwtService: JwtTokenService,
 						bcryptService: BcryptService,
 						userRepository: DatabaseUserRepository,
+						userGateway: UserGateway,
 					) =>
 						new UseCaseProxy(
 							new LoginUseCase(
@@ -47,6 +52,7 @@ export class AuthUsecasesProxyModule {
 								jwtService,
 								bcryptService,
 								userRepository,
+								userGateway,
 							),
 						),
 				},

@@ -1,4 +1,5 @@
 import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { IUserGateway } from '../../../domain/abstracts/gateways/user.gateway';
 import { IBcryptService } from '../../../main/interfaces/bcrypt.interface';
 import { IJwtService } from '../../../main/interfaces/jwt.interface';
 import { AuthDTO } from '../../../presentation/dtos/auth.dto';
@@ -13,6 +14,7 @@ export class LoginUseCase {
 		private readonly jwtService: IJwtService,
 		private readonly bcryptService: IBcryptService,
 		private readonly userRepository: IUserRepository,
+		private readonly userGateway: IUserGateway,
 	) {}
 
 	public async execute(credentials: AuthDTO): Promise<AuthPresenter> {
@@ -27,6 +29,8 @@ export class LoginUseCase {
 		});
 
 		this.logger.log(`LoginUseCases execute()`, `User have been logged in!`);
+
+		this.userGateway.emitUserOnlineEvent(userValidated);
 
 		return new AuthPresenter({ accessToken });
 	}
